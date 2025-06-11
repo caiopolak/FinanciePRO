@@ -1237,7 +1237,12 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script>
-
+            // Verificar se há token ao carregar a página
+            if (!authToken) {
+                showLogin();
+            } else {
+                checkAuthStatus();
+            }
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;

@@ -17,7 +17,8 @@ def before_request():
         'auth.login',
         'auth.register',
         'auth.forgot_password',
-        'auth.reset_password'
+        'auth.reset_password',
+        'api.refresh_token'  # <--- Adicionar este endpoint
     ]
     
     if request.endpoint in exempt_endpoints:

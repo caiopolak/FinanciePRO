@@ -53,13 +53,14 @@ class Database:
             if response.data and len(response.data) > 0:
                 return User(**response.data[0])
             
-            print("Insert response:", response)
+            # Se não retornar dados, buscar usuário criado
+            user = self.get_user_by_id(auth_response.user.id)
+            if user:
+                return user
+                
             return None
-            
         except Exception as e:
             print(f"Error creating user: {str(e)}")
-            if hasattr(e, 'args') and len(e.args) > 0:
-                print("Error details:", e.args[0])
             return None
     
     def get_user_by_id(self, user_id: str) -> Optional[User]:
