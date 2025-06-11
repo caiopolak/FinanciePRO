@@ -4,7 +4,7 @@ _by [dev]$pk • PyNexus x FinanciePRO • 2025 – Todos os direitos reservados
 
 ---
 
-![Logo FinanciePRO](https://i.imgur.com/A2n2cq3.png?300x250) <!-- Substitua pela URL real do logo -->
+![Logo FinanciePRO]([https://imgur.com/b5ba7142-8cb2-4573-afd7-b0ce7c861098](https://i.imgur.com/tMo5Wn8.png)?300x250) <!-- Substitua pela URL real do logo -->
 
 ## 🚀 Sobre o projeto
 
