@@ -20,7 +20,7 @@ class Database:
     # Operações de usuário
     def create_user(self, email: str, password: str, name: str) -> Optional[User]:
         try:
-            # Criar usuário no Auth do Supabase
+            # Criar usuário no Auth
             auth_response = self.client.auth.sign_up({
                 "email": email,
                 "password": password,
@@ -33,6 +33,7 @@ class Database:
             })
             
             if not auth_response.user:
+                print("Auth response:", auth_response)
                 return None
                 
             # Criar registro na tabela users
@@ -51,9 +52,14 @@ class Database:
             
             if response.data and len(response.data) > 0:
                 return User(**response.data[0])
+            
+            print("Insert response:", response)
             return None
+            
         except Exception as e:
             print(f"Error creating user: {str(e)}")
+            if hasattr(e, 'args') and len(e.args) > 0:
+                print("Error details:", e.args[0])
             return None
     
     def get_user_by_id(self, user_id: str) -> Optional[User]:
