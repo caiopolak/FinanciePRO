@@ -1,14 +1,14 @@
-# FinancePRO 📊 @financiepro
+# FinanciePRO 📊 @financiepro
 **Você no controle do seu dinheiro, de verdade!**  
 _by [dev]$pk • PyNexus x FinanciePRO • 2025 – Todos os direitos reservados._
 
 ---
 
-![Logo FinancePRO](https://via.placeholder.com/600x150?text=FinancePRO+Logo) <!-- Substitua pela URL real do logo -->
+![Logo FinanciePRO]([https://via.placeholder.com]https://i.imgur.com/A2n2cq3.png/600x150?text=FinanciePRO+Logo) <!-- Substitua pela URL real do logo -->
 
 ## 🚀 Sobre o projeto
 
-O **FinancePRO** é um aplicativo de gestão financeira pessoal desenvolvido para ajudar você a **organizar, economizar e evoluir** com controle total sobre seu dinheiro. Com uma interface moderna e intuitiva, o app traz funcionalidades inteligentes para que você tome decisões melhores e mais seguras sobre sua vida financeira.
+O **FinanciePRO** é um aplicativo de gestão financeira pessoal desenvolvido para ajudar você a **organizar, economizar e evoluir** com controle total sobre seu dinheiro. Com uma interface moderna e intuitiva, o app traz funcionalidades inteligentes para que você tome decisões melhores e mais seguras sobre sua vida financeira.
 
 > 💡 “Você no controle do seu dinheiro, de verdade.”
 
@@ -95,13 +95,13 @@ O FinanciePRO nasceu para **democratizar a educação financeira** e entregar fe
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/FinancePRO.git
+git clone https://github.com/seu-usuario/FinanciePRO.git
 
 # Entre na pasta do projeto
-cd FinancePRO
+cd FinanciePRO
 
 # Instale as dependências
 pip install -r requirements.txt
 
 # Execute o app (modo desenvolvimento)
-python main.py
+python run.py
