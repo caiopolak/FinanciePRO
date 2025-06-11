@@ -20,7 +20,7 @@ class Database:
     # Operações de usuário
     def create_user(self, email: str, password: str, name: str) -> Optional[User]:
         try:
-            # Criar usuário no Auth
+            # Criar usuário no Auth do Supabase
             auth_response = self.client.auth.sign_up({
                 "email": email,
                 "password": password,

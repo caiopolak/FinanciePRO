@@ -8,100 +8,76 @@ from .models import User, UserPlan
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/register', methods=['GET', 'POST'])
+@auth_bp.route('/register', methods=['POST'])
 def register():
-    if request.method == 'GET':
-        return render_template('register.html')
-    
-    data = request.get_json() if request.is_json else request.form
+    data = request.get_json()
     email = data.get('email')
     password = data.get('password')
     name = data.get('name')
     
     if not email or not password or not name:
-        return jsonify({"error": "Email, password and name are required"}), 400
+        return jsonify({"error": "Email, senha e nome são obrigatórios"}), 400
     
     # Verificar se o usuário já existe
     existing_user = current_app.db.get_user_by_email(email)
     if existing_user:
-        return jsonify({"error": "User already exists"}), 400
+        return jsonify({"error": "Usuário já existe"}), 400
     
     # Criar novo usuário
     try:
         user = current_app.db.create_user(email, password, name)
         if not user:
-            return jsonify({"error": "Failed to create user"}), 500
+            return jsonify({"error": "Falha ao criar usuário"}), 500
         
-        # Gerar token JWT
-        token = generate_jwt_token(user.id)
+        # Gerar token JWT do Supabase
+        auth_response = current_app.db.client.auth.sign_in_with_password({
+            "email": email,
+            "password": password
+        })
         
+        if not auth_response.user:
+            return jsonify({"error": "Falha ao autenticar usuário"}), 500
+            
         return jsonify({
-            "message": "User registered successfully",
-            "token": token,
+            "message": "Usuário registrado com sucesso",
+            "token": auth_response.session.access_token,
             "user": {
-                "id": user.id,
-                "email": user.email,
-                "name": user.name,
-                "plan": user.plan
+                "id": auth_response.user.id,
+                "email": email,
+                "name": name,
+                "plan": UserPlan.FREE.value
             }
         }), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
-    if request.method == 'GET':
-        # Verificar se já está autenticado
-        auth_header = request.headers.get('Authorization')
-        if auth_header and auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
-            payload = verify_jwt_token(token)
-            if payload:
-                return jsonify({"message": "Already authenticated"}), 200
-        
-        return render_template('login.html')
-    
-    data = request.get_json() if request.is_json else request.form
+    data = request.get_json()
     email = data.get('email')
     password = data.get('password')
     
     if not email or not password:
-        return jsonify({"error": "Email and password are required"}), 400
+        return jsonify({"error": "Email e senha são obrigatórios"}), 400
     
     try:
         # Autenticar com Supabase Auth
-        response = current_app.db.client.auth.sign_in_with_password({
+        auth_response = current_app.db.client.auth.sign_in_with_password({
             "email": email,
             "password": password
         })
         
-        # Obter dados do usuário diretamente da resposta
-        user_data = response.user.user_metadata
-        user = User(
-            id=response.user.id,
-            email=email,
-            name=user_data.get("name", ""),
-            plan=user_data.get("plan", UserPlan.FREE.value)
-        )    
-
-        if not response.user:
-            return jsonify({"error": "Invalid credentials"}), 401
+        if not auth_response.user:
+            return jsonify({"error": "Credenciais inválidas"}), 401
         
         # Obter dados do usuário
-        user = current_app.db.get_user_by_id(response.user.id)
+        user = current_app.db.get_user_by_id(auth_response.user.id)
         if not user:
-            return jsonify({"error": "User not found"}), 404
-        
-        # Gerar token JWT
-        token = generate_jwt_token(user.id)
-        
-        # Armazenar na sessão
-        session['user_id'] = user.id
-        session['token'] = token
+            return jsonify({"error": "Usuário não encontrado"}), 404
         
         return jsonify({
-            "message": "Login successful",
-            "token": token,
+            "message": "Login realizado com sucesso",
+            "token": auth_response.session.access_token,
             "user": {
                 "id": user.id,
                 "email": user.email,
