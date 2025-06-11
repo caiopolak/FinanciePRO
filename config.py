@@ -16,9 +16,9 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "ZSMHZnSutbGr+cBEqyIgWhgmmAZBD3E+lppzTQjueeFa3ZPYW5H+B5L2iwbjzQDM3Qk2QjDWJFNe9rNNwk1taQ==")
     
     # Adicione esta linha para resolver o erro de JWT
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "ZSMHZnSutbGr+cBEqyIgWhgmmAZBD3E+lppzTQjueeFa3ZPYW5H+B5L2iwbjzQDM3Qk2QjDWJFNe9rNNwk1taQ==")
+    JWT_SECRET_KEY = os.getenv("SECRET_KEY", "ZSMHZnSutbGr+cBEqyIgWhgmmAZBD3E+lppzTQjueeFa3ZPYW5H+B5L2iwbjzQDM3Qk2QjDWJFNe9rNNwk1taQ==")
     JWT_ALGORITHM = "HS256"
-    
+
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'

@@ -18,38 +18,55 @@ def register():
     if not email or not password or not name:
         return jsonify({"error": "Email, senha e nome são obrigatórios"}), 400
     
-    # Verificar se o usuário já existe
-    existing_user = current_app.db.get_user_by_email(email)
-    if existing_user:
-        return jsonify({"error": "Usuário já existe"}), 400
-    
-    # Criar novo usuário
     try:
-        user = current_app.db.create_user(email, password, name)
-        if not user:
-            return jsonify({"error": "Falha ao criar usuário"}), 500
-        
-        # Gerar token JWT do Supabase
-        auth_response = current_app.db.client.auth.sign_in_with_password({
+        # Criar usuário diretamente no Supabase Auth
+        auth_response = current_app.db.client.auth.sign_up({
             "email": email,
-            "password": password
+            "password": password,
+            "options": {
+                "data": {
+                    "name": name
+                }
+            }
         })
         
         if not auth_response.user:
-            return jsonify({"error": "Falha ao autenticar usuário"}), 500
+            return jsonify({"error": "Falha ao criar usuário"}), 500
             
+        # Criar registro na tabela users
+        user_data = {
+            "id": str(auth_response.user.id),
+            "email": email,
+            "name": name,
+            "plan": UserPlan.FREE.value,
+            "created_at": datetime.utcnow().isoformat()
+        }
+        
+        response = current_app.db.client.table("users").insert(user_data).execute()
+        
+        if response.data and len(response.data) > 0:
+            user = User(**response.data[0])
+        else:
+            user = current_app.db.get_user_by_id(auth_response.user.id)
+            if not user:
+                return jsonify({"error": "Falha ao criar registro do usuário"}), 500
+        
+        # Gerar token JWT
+        token = generate_jwt_token(auth_response.user.id)
+        
         return jsonify({
             "message": "Usuário registrado com sucesso",
-            "token": auth_response.session.access_token,
+            "token": token,
             "user": {
-                "id": auth_response.user.id,
-                "email": email,
-                "name": name,
-                "plan": UserPlan.FREE.value
+                "id": user.id,
+                "email": user.email,
+                "name": user.name,
+                "plan": user.plan
             }
         }), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Erro no registro: {str(e)}")
+        return jsonify({"error": "Erro interno do servidor"}), 500
 
 @auth_bp.route('/login', methods=['POST'])
 def login():

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, logging, render_template
 from config import Config
 from .database import Database
 from .payments import PaymentService
@@ -9,6 +9,15 @@ def create_app():
     app = Flask(__name__, template_folder='templates')
     app.config.from_object(Config)
     
+    # Configurar logger
+    app.logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s '
+        '[in %(pathname)s:%(lineno)d]'
+    ))
+    app.logger.addHandler(handler)
+
     # Registrar blueprints
     from .auth import auth_bp
     from .routes import api_bp
