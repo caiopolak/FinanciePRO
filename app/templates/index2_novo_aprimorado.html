@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanciePRO - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-primary: #003f5c;
+            --color-secondary: #2f9e44;
+            --color-light: #f4f4f4;
+            --color-dark: #2b2b2b;
+            --color-warning: #f8961e;
+            --color-danger: #d62828;
+            --color-text: #333;
+            --color-text-light: #666;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-text);
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Mobile First */
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Mobile */
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--color-primary);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .mobile-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-header .logo img {
+            height: 36px;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 1.5rem;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            height: 100vh;
+            width: 260px;
+            overflow-y: auto;
+            z-index: 200;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar .logo img {
+            height: 40px;
+        }
+
+        .user-info {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-plan {
+            font-size: 0.8rem;
+            background-color: rgba(47, 158, 68, 0.2);
+            color: var(--color-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: var(--color-secondary);
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #268a3a;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--color-secondary);
+            color: var(--color-secondary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(47, 158, 68, 0.1);
+        }
+
+        .btn-danger {
+            background-color: var(--color-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #bb2323;
+        }
+
+        /* Dashboard metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background-color: white;
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-title {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .balance .metric-value {
+            color: var(--color-primary);
+        }
+
+        .income .metric-value {
+            color: var(--color-secondary);
+        }
+
+        .expenses .metric-value {
+            color: var(--color-danger);
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-card {
+            background-color: white;
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Tips and notifications */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background-color: white;
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-content {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .tip-item, .notification-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tip-item:last-child, .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Overlay for mobile menu */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--color-dark);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .container {
+                display: grid;
+                grid-template-columns: 240px 1fr;
+                min-height: 100vh;
+            }
+
+            .mobile-header {
+                display: none;
+            }
+
+            .sidebar {
+                position: sticky;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: auto;
+            }
+
+            .sidebar-overlay {
+                display: none !important;
+            }
+
+            .main-content {
+                padding: 2rem;
+            }
+
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2rem;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .main-content {
+                padding: 2.5rem;
+            }
+        }
+
+        /* Landscape orientation adjustments */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .sidebar {
+                overflow-y: auto;
+                height: 100vh;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+
+            .info-content {
+                max-height: 150px;
+            }
+        }
+
+        /* Chart loader */
+        .chart-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--color-primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/icon2.png') }}" alt="FinanciePRO Logo">
+            <span>FinanciePRO</span>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/icon1.png') }}" alt="FinanciePRO Logo">
+            <span>FinanciePRO</span>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-name">Olá, Usuário</div>
+            <div class="user-plan">Plano: PRO</div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Transações</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bullseye"></i>
+                <span>Metas</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Investimentos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-wallet"></i>
+                <span>Orçamentos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-credit-card"></i>
+                <span>Assinatura</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </nav>
+    </aside>
+    
+    <!-- Main content -->
+    <main class="main-content">
+        <div class="header">
+            <h1 class="page-title">
+                <i class="fas fa-chart-bar"></i> Dashboard Financeiro
+            </h1>
+            <div class="user-actions">
+                <button class="btn btn-outline">
+                    <i class="fas fa-bell"></i>
+                    <span>Notificações</span>
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    <span>Nova Transação</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card balance">
+                <div class="metric-title">Saldo Atual</div>
+                <div class="metric-value">R$ 5.247,89</div>
+                <div class="metric-change">+12% desde o mês passado</div>
+            </div>
+            
+            <div class="metric-card income">
+                <div class="metric-title">Receitas</div>
+                <div class="metric-value">R$ 8.500,00</div>
+                <div class="metric-change">+8% desde o mês passado</div>
+            </div>
+            
+            <div class="metric-card expenses">
+                <div class="metric-title">Despesas</div>
+                <div class="metric-value">R$ 3.252,11</div>
+                <div class="metric-change">-5% desde o mês passado</div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <i class="fas fa-money-bill-wave"></i> Receitas vs Despesas
+                </h3>
+                <div class="chart-container">
+                    <div class="chart-loader">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="incomeExpenseChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <i class="fas fa-chart-pie"></i> Distribuição de Gastos
+                </h3>
+                <div class="chart-container">
+                    <div class="chart-loader">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="expenseDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tips and notifications -->
+        <div class="info-grid">
+            <div class="info-card">
+                <h3 class="info-title">
+                    <i class="fas fa-lightbulb"></i> Dicas Financeiras
+                </h3>
+                <div class="info-content">
+                    <div class="tip-item">
+                        <strong><i class="fas fa-tip"></i> Dica:</strong> Automatize suas economias transferindo uma parte do salário assim que receber.
+                    </div>
+                    <div class="tip-item">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Alerta:</strong> Você está gastando mais de 30% da sua renda com Alimentação. Considere reduzir.
+                    </div>
+                    <div class="tip-item">
+                        <strong><i class="fas fa-tip"></i> Dica:</strong> Considere investir pelo menos 10% da sua renda para construir riqueza a longo prazo.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3 class="info-title">
+                    <i class="fas fa-bell"></i> Alertas Recentes
+                </h3>
+                <div class="info-content">
+                    <div class="notification-item">
+                        <strong><i class="fas fa-money-bill"></i> Orçamento:</strong> Você ultrapassou seu orçamento em Lazer em 15%.
+                    </div>
+                    <div class="notification-item">
+                        <strong><i class="fas fa-bullseye"></i> Meta:</strong> Faltam 7 dias para sua meta "Viagem à Europa"!
+                    </div>
+                    <div class="notification-item">
+                        <strong><i class="fas fa-credit-card"></i> Pagamento:</strong> Sua assinatura PRO foi renovada com sucesso.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 FinanciePRO. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script>
+        // Menu mobile functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+            });
+            
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Initialize charts with a delay to simulate data loading
+            setTimeout(initCharts, 1500);
+            
+            // Window resize handler
+            window.addEventListener('resize', handleResponsiveLayout);
+            handleResponsiveLayout();
+            
+            // Simulate dynamic data updates
+            setInterval(updateMetrics, 30000);
+        });
+        
+        function handleResponsiveLayout() {
+            // Adjust chart height based on screen orientation
+            const chartContainers = document.querySelectorAll('.chart-container');
+            const isLandscape = window.innerWidth > window.innerHeight;
+            
+            chartContainers.forEach(container => {
+                container.style.height = isLandscape ? '200px' : '250px';
+            });
+        }
+        
+        function initCharts() {
+            // Remove loaders
+            document.querySelectorAll('.chart-loader').forEach(loader => {
+                loader.style.display = 'none';
+            });
+            
+            // Gráfico de Receitas vs Despesas
+            const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            const incomeExpenseChart = new Chart(incomeExpenseCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Receitas',
+                        data: [6500, 7200, 7800, 8200, 8000, 8500],
+                        backgroundColor: '#2f9e44',
+                        borderColor: '#268a3a',
+                        borderWidth: 1
+                    }, {
+                        label: 'Despesas',
+                        data: [4200, 3800, 3500, 3400, 3300, 3252],
+                        backgroundColor: '#d62828',
+                        borderColor: '#bb2323',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': R$ ' + context.raw.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de distribuição de gastos
+            const expenseDistributionCtx = document.getElementById('expenseDistributionChart').getContext('2d');
+            const expenseDistributionChart = new Chart(expenseDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Moradia', 'Alimentação', 'Transporte', 'Lazer', 'Saúde', 'Outros'],
+                    datasets: [{
+                        data: [1200, 950, 450, 350, 200, 102.11],
+                        backgroundColor: [
+                            '#003f5c',
+                            '#2f9e44',
+                            '#f8961e',
+                            '#d62828',
+                            '#58508d',
+                            '#ff6361'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': R$ ' + context.raw.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Store charts for later updates
+            window.incomeExpenseChart = incomeExpenseChart;
+            window.expenseDistributionChart = expenseDistributionChart;
+        }
+        
+        function updateMetrics() {
+            // Simulate live data updates
+            const balance = document.querySelector('.balance .metric-value');
+            const income = document.querySelector('.income .metric-value');
+            const expenses = document.querySelector('.expenses .metric-value');
+            
+            // Small random fluctuations to simulate real-time data
+            const newBalance = 5247.89 + (Math.random() * 20 - 10);
+            const newIncome = 8500 + (Math.random() * 50 - 25);
+            const newExpenses = 3252.11 + (Math.random() * 30 - 15);
+            
+            balance.textContent = 'R$ ' + newBalance.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            income.textContent = 'R$ ' + newIncome.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            expenses.textContent = 'R$ ' + newExpenses.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            
+            // Update charts if they exist
+            if (window.incomeExpenseChart) {
+                const newData = window.incomeExpenseChart.data.datasets[0].data.map(value => {
+                    return value + (Math.random() * 100 - 50);
+                });
+                window.incomeExpenseChart.data.datasets[0].data = newData;
+                window.incomeExpenseChart.update();
+            }
+        }
+    </script>
+</body>
+</html>
