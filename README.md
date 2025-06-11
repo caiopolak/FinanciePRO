@@ -36,7 +36,7 @@ O **FinanciePRO** é um aplicativo de gestão financeira pessoal desenvolvido pa
 | **Atenção**      | Laranja vivo    | `#f8961e`  |
 | **Erro/alerta**  | Vermelho claro  | `#d62828`  |
 
-> 🎨 Gradiente recomendado: `#003f5c → #2f9e44`  
+> 🎨 Gradiente: `#003f5c → #2f9e44`  
 > Ideal para botões, barras de progresso e splash screen.
 
 ### 🖋 Tipografia
@@ -47,37 +47,9 @@ O **FinanciePRO** é um aplicativo de gestão financeira pessoal desenvolvido pa
 
 ---
 
-## 📱 Capturas de Tela (Mockups)
+## 📱 Site de preview (Mockups)
 
-> _(Adicione aqui prints ou protótipos do app em uso para demonstrar a interface)_  
-> Sugestão: use uma moldura de celular + fundo em gradiente `#003f5c → #2f9e44`.
-
----
-
-## 💬 Exemplos de Conteúdo
-
-### 📚 Educação Financeira
-> “Você sabia? Guardar 10% da sua renda por mês pode mudar sua vida em 1 ano.”
-
-> “Desafio: Passe 7 dias sem gastar com delivery. Consegue?”
-
-### 📊 Funcionalidades
-> “Crie metas e veja seu progresso em tempo real com o FinanciePRO!”
-
-> “Gerencie investimentos sem complicações. Tudo no seu app.”
-
-### 🔔 Dicas e Alertas
-> “🚨 Gasto alto detectado: será que você pode cortar esse custo?”
-
-> “💡 Dica do dia: use o orçamento mensal para evitar surpresas.”
-
----
-
-## 🧠 Propósito e Missão
-
-O FinanciePRO nasceu para **democratizar a educação financeira** e entregar ferramentas práticas para que qualquer pessoa possa cuidar melhor do seu dinheiro.
-
-> 🔒 “Seus dados, sua confiança. Suas finanças, seu poder.”
+> _([clique aqui](https://caiopolak.github.io/FinanciePRO/))_  
 
 ---
 
