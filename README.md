@@ -1,92 +1,199 @@
-# FinancePRO 📊 @financiepro
-**Você no controle do seu dinheiro, de verdade!**  
-_by [dev]$pk • PyNexus x FinanciePRO • 2025 – Todos os direitos reservados._
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FinancePRO 📊</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@600&family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #003f5c;
+      --verde: #2f9e44;
+      --cinza-claro: #f4f4f4;
+      --cinza-escuro: #2b2b2b;
+      --laranja: #f8961e;
+      --vermelho: #d62828;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, var(--azul), var(--verde));
+      color: var(--cinza-claro);
+      line-height: 1.6;
+      padding: 0;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+      color: var(--cinza-escuro);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    h1, h2, h3 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--azul);
+    }
+    h1 {
+      font-size: 2.2rem;
+    }
+    .slogan {
+      font-style: italic;
+      font-weight: bold;
+      color: var(--verde);
+    }
+    code {
+      background-color: #eee;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    pre {
+      background-color: #eee;
+      padding: 1rem;
+      overflow-x: auto;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    .tag {
+      background: var(--laranja);
+      color: white;
+      font-weight: bold;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+    }
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    a {
+      color: var(--azul);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>FinancePRO 📊</h1>
+    <p class="slogan">Você no controle do seu dinheiro, de verdade!</p>
+    <p><strong>by</strong> [dev]$pk • <strong>PyNexus x FinanciePRO</strong> – 2025 – Todos os direitos reservados.</p>
 
----
+    <h2>🚀 Sobre o projeto</h2>
+    <p>
+      O <strong>FinancePRO</strong> é um app de gestão financeira pessoal que ajuda você a <strong>organizar, economizar e evoluir</strong>. Tenha controle real sobre sua vida financeira com uma interface moderna e prática.
+    </p>
+    <blockquote>💡 “Você no controle do seu dinheiro, de verdade.”</blockquote>
 
-![Logo FinancePRO](https://via.placeholder.com/600x150?text=FinancePRO+Logo) <!-- Substitua pela URL real do logo -->
+    <h2>🎯 Funcionalidades</h2>
+    <ul>
+      <li>📅 Controle de despesas e receitas</li>
+      <li>🎯 Metas financeiras personalizadas</li>
+      <li>📊 Visualização gráfica do progresso</li>
+      <li>💡 Dicas diárias de educação financeira</li>
+      <li>🔔 Alertas de gastos incomuns</li>
+      <li>🔐 Segurança e privacidade de dados</li>
+    </ul>
 
-## 🚀 Sobre o projeto
+    <h2>🌈 Identidade Visual</h2>
+    <table>
+      <tr><th>Função</th><th>Cor</th><th>Código Hex</th></tr>
+      <tr><td>Primária</td><td>Azul petróleo</td><td><code>#003f5c</code></td></tr>
+      <tr><td>Secundária</td><td>Verde esmeralda</td><td><code>#2f9e44</code></td></tr>
+      <tr><td>Neutra clara</td><td>Cinza gelo</td><td><code>#f4f4f4</code></td></tr>
+      <tr><td>Texto escuro</td><td>Cinza grafite</td><td><code>#2b2b2b</code></td></tr>
+      <tr><td>Atenção</td><td>Laranja vivo</td><td><code>#f8961e</code></td></tr>
+      <tr><td>Erro/Alerta</td><td>Vermelho claro</td><td><code>#d62828</code></td></tr>
+    </table>
 
-O **FinancePRO** é um aplicativo de gestão financeira pessoal desenvolvido para ajudar você a **organizar, economizar e evoluir** com controle total sobre seu dinheiro. Com uma interface moderna e intuitiva, o app traz funcionalidades inteligentes para que você tome decisões melhores e mais seguras sobre sua vida financeira.
+    <p><strong>Gradiente sugerido:</strong> <code>#003f5c → #2f9e44</code></p>
+    <p><strong>Fontes:</strong> Poppins (títulos), Inter (texto), Montserrat/IBM Plex Sans (destaques)</p>
 
-> 💡 “Você no controle do seu dinheiro, de verdade.”
+    <h2>📬 Exemplo de conteúdo</h2>
+    <h3>📚 Educação Financeira</h3>
+    <ul>
+      <li>“Você sabia? Guardar 10% da sua renda por mês pode mudar sua vida em 1 ano.”</li>
+      <li>“Desafio: Passe 7 dias sem gastar com delivery. Consegue?”</li>
+    </ul>
 
----
+    <h3>📊 Funcionalidades</h3>
+    <ul>
+      <li>“Crie metas e veja seu progresso em tempo real com o FinanciePRO!”</li>
+      <li>“Gerencie investimentos sem complicações. Tudo no seu app.”</li>
+    </ul>
 
-## 🎯 Funcionalidades
+    <h3>🔔 Alertas</h3>
+    <ul>
+      <li>“🚨 Gasto alto detectado: será que você pode cortar esse custo?”</li>
+      <li>“💡 Dica do dia: use o orçamento mensal para evitar surpresas.”</li>
+    </ul>
 
-- 📅 **Controle de Despesas e Receitas**  
-- 🎯 **Metas financeiras personalizadas**  
-- 📊 **Visualização gráfica do seu progresso**  
-- 💡 **Dicas diárias de educação financeira**  
-- 🔔 **Alertas de gastos incomuns ou excessivos**  
-- 🔐 **Segurança e privacidade dos seus dados**
+    <h2>🛠 Tecnologias Utilizadas</h2>
+    <ul>
+      <li>Python (Backend)</li>
+      <li>Flutter ou React Native (Frontend Mobile)</li>
+      <li>Firebase ou Supabase (Banco e Auth)</li>
+      <li>Figma (UI/UX)</li>
+      <li>Git + GitHub</li>
+    </ul>
 
----
+    <h2>⚙️ Como rodar localmente</h2>
+    <pre><code># Clone o repositório
+git clone https://github.com/seu-usuario/FinancePRO.git
 
-## 🌈 Identidade Visual
+# Entre na pasta
+cd FinancePRO
 
-| Função           | Cor             | Código Hex |
-| ---------------- | --------------- | ---------- |
-| **Primária**     | Azul petróleo   | `#003f5c`  |
-| **Secundária**   | Verde esmeralda | `#2f9e44`  |
-| **Neutra clara** | Cinza gelo      | `#f4f4f4`  |
-| **Texto escuro** | Cinza grafite   | `#2b2b2b`  |
-| **Atenção**      | Laranja vivo    | `#f8961e`  |
-| **Erro/alerta**  | Vermelho claro  | `#d62828`  |
+# Instale dependências
+pip install -r requirements.txt
 
-> 🎨 Gradiente recomendado: `#003f5c → #2f9e44`  
-> Ideal para botões, barras de progresso e splash screen.
+# Execute o app
+python main.py</code></pre>
 
-### 🖋 Tipografia
+    <h2>🤝 Contribuindo</h2>
+    <ol>
+      <li>Faça um fork do projeto</li>
+      <li>Crie uma branch: <code>git checkout -b minha-feature</code></li>
+      <li>Commit: <code>git commit -m 'feat: nova funcionalidade'</code></li>
+      <li>Push: <code>git push origin minha-feature</code></li>
+      <li>Abra um Pull Request 🚀</li>
+    </ol>
 
-- Cabeçalhos: **Poppins**
-- Corpo de texto: **Inter**
-- Destaques: **Montserrat** ou **IBM Plex Sans**
+    <h2>📄 Licença</h2>
+    <p>Este projeto está sob a licença <strong>MIT</strong>. Veja o arquivo <code>LICENSE</code> para mais informações.</p>
 
----
+    <h2>📲 Contato</h2>
+    <ul>
+      <li><strong>Instagram:</strong> <a href="https://instagram.com/financiepro" target="_blank">@financiepro</a></li>
+      <li><strong>Email:</strong> contato@financiepro.com.br</li>
+      <li><strong>Dev:</strong> [dev]$pk</li>
+    </ul>
 
-## 📱 Capturas de Tela (Mockups)
+    <h2>✨ Slogans</h2>
+    <ul>
+      <li>💰 Organize. Economize. Evolua.</li>
+      <li>🚀 A vida financeira que você merece começa aqui.</li>
+      <li>🧠 Educação financeira prática, no seu ritmo.</li>
+      <li>🔒 Seus dados, sua confiança. Suas finanças, seu poder.</li>
+    </ul>
 
-> _(Adicione aqui prints ou protótipos do app em uso para demonstrar a interface)_  
-> Sugestão: use uma moldura de celular + fundo em gradiente `#003f5c → #2f9e44`.
-
----
-
-## 💬 Exemplos de Conteúdo
-
-### 📚 Educação Financeira
-> “Você sabia? Guardar 10% da sua renda por mês pode mudar sua vida em 1 ano.”
-
-> “Desafio: Passe 7 dias sem gastar com delivery. Consegue?”
-
-### 📊 Funcionalidades
-> “Crie metas e veja seu progresso em tempo real com o FinanciePRO!”
-
-> “Gerencie investimentos sem complicações. Tudo no seu app.”
-
-### 🔔 Dicas e Alertas
-> “🚨 Gasto alto detectado: será que você pode cortar esse custo?”
-
-> “💡 Dica do dia: use o orçamento mensal para evitar surpresas.”
-
----
-
-## 🧠 Propósito e Missão
-
-O FinanciePRO nasceu para **democratizar a educação financeira** e entregar ferramentas práticas para que qualquer pessoa possa cuidar melhor do seu dinheiro.
-
-> 🔒 “Seus dados, sua confiança. Suas finanças, seu poder.”
-
----
-
-## 🛠 Tecnologias Utilizadas
-
-- Python (Backend/API)
-- Flutter ou React Native (Frontend Mobile)
-- Firebase ou Supabase (Banco de dados & Auth)
-- Figma (Design UI/UX)
-- Git + GitHub (Controle de versão)
-
----
+    <div class="footer">
+      Desenvolvido com 💙 por [dev]$pk • PyNexus x FinanciePRO – 2025
+    </div>
+  </div>
+</body>
+</html>
