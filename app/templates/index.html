@@ -1238,61 +1238,47 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script>
 
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById('regName').value;
-        const email = document.getElementById('regEmail').value;
-        const password = document.getElementById('regPassword').value;
-        const confirmPassword = document.getElementById('regConfirmPassword').value;
-        
-        if (password.length < 6) {
-            alert('A senha deve ter pelo menos 6 caracteres');
-            return;
-        }
-        
-        if (password !== confirmPassword) {
-            alert('As senhas não coincidem');
-            return;
-        }
-        
-        loadingOverlay.style.display = 'flex';
-        
-        fetch('/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email, password })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Erro ao registrar'); });
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem');
+                return;
             }
-            return response.json();
-        })
-        .then(data => {
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('userId', data.user.id);
-            localStorage.setItem('userName', data.user.name);
-            localStorage.setItem('userPlan', data.user.plan);
             
-            authToken = data.token;
-            userId = data.user.id;
-            userName = data.user.name;
-            userPlan = data.user.plan;
+            loadingOverlay.style.display = 'flex';
             
-            hideLogin();
-            loadingOverlay.style.display = 'none';
-            
-            loadUserData();
-            loadDashboardData();
-            loadUnreadNotifications();
-        })
-        .catch(error => {
-            loadingOverlay.style.display = 'none';
-            alert(error.message);
+            fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, password })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { 
+                        throw new Error(err.error || 'Erro ao registrar'); 
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Registro realizado com sucesso!');
+                // Redirecionar para login ou fazer login automático
+            })
+            .catch(error => {
+                console.error('Registration error:', error);
+                alert(error.message || 'Erro ao registrar');
+            })
+            .finally(() => {
+                loadingOverlay.style.display = 'none';
+            });
         });
-    });
 
         // Variáveis globais
         let authToken = localStorage.getItem('authToken');

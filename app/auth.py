@@ -109,26 +109,27 @@ def forgot_password():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@auth_bp.route('/reset-password', methods=['GET', 'POST'])
+@auth_bp.route('/reset-password', methods=['POST'])
 def reset_password():
-    if request.method == 'GET':
-        token = request.args.get('token')
-        return render_template('reset_password.html', token=token)
-    
-    data = request.get_json() if request.is_json else request.form
+    data = request.get_json()
     token = data.get('token')
     new_password = data.get('new_password')
     
     if not token or not new_password:
-        return jsonify({"error": "Token and new password are required"}), 400
+        return jsonify({"error": "Token e nova senha são obrigatórios"}), 400
     
     try:
-        current_app.db.client.auth.update_user({
+        # Usar o token para atualizar a senha
+        response = current_app.db.client.auth.update_user({
             "password": new_password
         })
         
-        return jsonify({"message": "Senha alterada com sucesso!"}), 200
+        if not response.user:
+            return jsonify({"error": "Falha ao atualizar senha"}), 400
+            
+        return jsonify({"message": "Senha atualizada com sucesso"}), 200
     except Exception as e:
+        print(f"Error resetting password: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 def generate_jwt_token(user_id: str) -> str:
