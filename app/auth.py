@@ -91,7 +91,7 @@ def login():
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
     session.clear()
-    return jsonify({"message": "Logged out successfully"}), 200
+    return jsonify({"message": "Deslogado com sucesso!"}), 200
 
 @auth_bp.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -101,11 +101,11 @@ def forgot_password():
     email = request.get_json().get('email') if request.is_json else request.form.get('email')
     
     if not email:
-        return jsonify({"error": "Email is required"}), 400
+        return jsonify({"error": "Email é necessário"}), 400
     
     try:
         current_app.db.client.auth.reset_password_email(email)
-        return jsonify({"message": "Password reset email sent"}), 200
+        return jsonify({"message": "Email de reset de senha enviado com sucesso!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -127,7 +127,7 @@ def reset_password():
             "password": new_password
         })
         
-        return jsonify({"message": "Password updated successfully"}), 200
+        return jsonify({"message": "Senha alterada com sucesso!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
