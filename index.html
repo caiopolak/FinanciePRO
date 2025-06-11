@@ -1,541 +1,64 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanciePRO - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --color-primary: #003f5c;
-            --color-secondary: #2f9e44;
-            --color-light: #f4f4f4;
-            --color-dark: #2b2b2b;
-            --color-warning: #f8961e;
-            --color-danger: #d62828;
-            --color-text: #333;
-            --color-text-light: #666;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--color-text);
-            background-color: #f9f9f9;
-            line-height: 1.6;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            background-color: var(--color-primary);
-            color: white;
-            padding: 1.5rem;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .user-info {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .user-name {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-
-        .user-plan {
-            font-size: 0.8rem;
-            background-color: rgba(47, 158, 68, 0.2);
-            color: var(--color-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--radius-sm);
-            display: inline-block;
-        }
-
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            color: white;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-item.active {
-            background-color: var(--color-secondary);
-        }
-
-        /* Main content */
-        .main-content {
-            padding: 2rem;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-sm);
-            border: none;
-            font-family: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background-color: var(--color-secondary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #268a3a;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--color-secondary);
-            color: var(--color-secondary);
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(47, 158, 68, 0.1);
-        }
-
-        .btn-danger {
-            background-color: var(--color-danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #bb2323;
-        }
-
-        /* Dashboard metrics */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            background-color: white;
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .metric-title {
-            font-size: 0.9rem;
-            color: var(--color-text-light);
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-value {
-            font-size: 1.75rem;
-            font-weight: 600;
-        }
-
-        .balance .metric-value {
-            color: var(--color-primary);
-        }
-
-        .income .metric-value {
-            color: var(--color-secondary);
-        }
-
-        .expenses .metric-value {
-            color: var(--color-danger);
-        }
-
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .chart-card {
-            background-color: white;
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .chart-title {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-
-        .chart-container {
-            height: 300px;
-            position: relative;
-        }
-
-        /* Tips and notifications */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .info-card {
-            background-color: white;
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .info-title {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .info-content {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .tip-item, .notification-item {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .tip-item:last-child, .notification-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .charts-grid, .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanciePRO - Gestão Financeira</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@600&family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #003f5c;
+      --verde: #2f9e44;
+      --cinza-claro: #f4f4f4;
+      --cinza-escuro: #2b2b2b;
+      --laranja: #f8961e;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, var(--azul), var(--verde));
+      color: var(--cinza-claro);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .logo {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      margin: 0;
+    }
+    p {
+      font-size: 1.2rem;
+      margin: 1rem 0 2rem;
+    }
+    .cta-button {
+      background-color: var(--laranja);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .cta-button:hover {
+      background-color: #e07c00;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <span>📊</span>
-                <span>FinanciePRO</span>
-            </div>
-            
-            <div class="user-info">
-                <div class="user-name">Olá, Usuário</div>
-                <div class="user-plan">Plano: PRO</div>
-            </div>
-            
-            <nav class="nav-menu">
-                <a href="#" class="nav-item active">
-                    <span>🏠</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>💱</span>
-                    <span>Transações</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>🎯</span>
-                    <span>Metas</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>📈</span>
-                    <span>Investimentos</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>💰</span>
-                    <span>Orçamentos</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>⚙️</span>
-                    <span>Configurações</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>💳</span>
-                    <span>Assinatura</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <span>🚪</span>
-                    <span>Sair</span>
-                </a>
-            </nav>
-        </aside>
-        
-        <!-- Main content -->
-        <main class="main-content">
-            <header class="header">
-                <h1 class="page-title">📊 Dashboard Financeiro</h1>
-                <div class="user-actions">
-                    <button class="btn btn-outline">
-                        <span>🔔</span>
-                        <span>Notificações</span>
-                    </button>
-                    <button class="btn btn-primary">
-                        <span>+</span>
-                        <span>Nova Transação</span>
-                    </button>
-                </div>
-            </header>
-            
-            <!-- Metrics -->
-            <div class="metrics-grid">
-                <div class="metric-card balance">
-                    <div class="metric-title">Saldo Atual</div>
-                    <div class="metric-value">R$ 5.247,89</div>
-                </div>
-                
-                <div class="metric-card income">
-                    <div class="metric-title">Receitas</div>
-                    <div class="metric-value">R$ 8.500,00</div>
-                </div>
-                
-                <div class="metric-card expenses">
-                    <div class="metric-title">Despesas</div>
-                    <div class="metric-value">R$ 3.252,11</div>
-                </div>
-            </div>
-            
-            <!-- Charts -->
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3 class="chart-title">Receitas vs Despesas</h3>
-                    <div class="chart-container">
-                        <canvas id="incomeExpenseChart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="chart-card">
-                    <h3 class="chart-title">Distribuição de Gastos</h3>
-                    <div class="chart-container">
-                        <canvas id="expenseDistributionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tips and notifications -->
-            <div class="info-grid">
-                <div class="info-card">
-                    <h3 class="info-title">💡 Dicas Financeiras</h3>
-                    <div class="info-content">
-                        <div class="tip-item">
-                            <strong>Dica:</strong> Automatize suas economias transferindo uma parte do salário assim que receber.
-                        </div>
-                        <div class="tip-item">
-                            <strong>Alerta:</strong> Você está gastando mais de 30% da sua renda com Alimentação. Considere reduzir.
-                        </div>
-                        <div class="tip-item">
-                            <strong>Dica:</strong> Considere investir pelo menos 10% da sua renda para construir riqueza a longo prazo.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="info-card">
-                    <h3 class="info-title">🔔 Alertas Recentes</h3>
-                    <div class="info-content">
-                        <div class="notification-item">
-                            <strong>Orçamento:</strong> Você ultrapassou seu orçamento em Lazer em 15%.
-                        </div>
-                        <div class="notification-item">
-                            <strong>Meta:</strong> Faltam 7 dias para sua meta "Viagem à Europa"!
-                        </div>
-                        <div class="notification-item">
-                            <strong>Pagamento:</strong> Sua assinatura PRO foi renovada com sucesso.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-    <script>
-        // Inicializar gráficos
-        document.addEventListener('DOMContentLoaded', function() {
-            // Gráfico de Receitas vs Despesas
-            const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
-            const incomeExpenseChart = new Chart(incomeExpenseCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Receitas', 'Despesas'],
-                    datasets: [{
-                        label: 'Valor (R$)',
-                        data: [8500, 3252.11],
-                        backgroundColor: [
-                            '#2f9e44',
-                            '#d62828'
-                        ],
-                        borderColor: [
-                            '#268a3a',
-                            '#bb2323'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-            
-            // Gráfico de distribuição de gastos
-            const expenseDistributionCtx = document.getElementById('expenseDistributionChart').getContext('2d');
-            const expenseDistributionChart = new Chart(expenseDistributionCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Moradia', 'Alimentação', 'Transporte', 'Lazer', 'Saúde', 'Outros'],
-                    datasets: [{
-                        data: [1200, 950, 450, 350, 200, 102.11],
-                        backgroundColor: [
-                            '#003f5c',
-                            '#2f9e44',
-                            '#f8961e',
-                            '#d62828',
-                            '#58508d',
-                            '#ff6361'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right'
-                        }
-                    }
-                }
-            });
-            
-            // Simular carregamento de dados da API
-            async function loadDashboardData() {
-                try {
-                    const response = await fetch('/api/dashboard/summary');
-                    const data = await response.json();
-                    
-                    if (response.ok) {
-                        // Atualizar métricas
-                        document.querySelector('.balance .metric-value').textContent = 
-                            `R$ ${data.balance.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-                        document.querySelector('.income .metric-value').textContent = 
-                            `R$ ${data.income.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-                        document.querySelector('.expenses .metric-value').textContent = 
-                            `R$ ${data.expenses.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-                        
-                        // Atualizar gráficos
-                        incomeExpenseChart.data.datasets[0].data = [data.income, data.expenses];
-                        incomeExpenseChart.update();
-                        
-                        if (data.category_summary && data.category_summary.length > 0) {
-                            expenseDistributionChart.data.labels = data.category_summary.map(c => c.category);
-                            expenseDistributionChart.data.datasets[0].data = data.category_summary.map(c => c.sum);
-                            expenseDistributionChart.update();
-                        }
-                    } else {
-                        console.error('Error loading dashboard data:', data.error);
-                    }
-                } catch (error) {
-                    console.error('Error fetching dashboard data:', error);
-                }
-            }
-            
-            // Carregar dados ao iniciar
-            loadDashboardData();
-        });
-    </script>
+  <img class="logo" src="https://rnpkqnrxpwxmnzaqthqm.supabase.co/storage/v1/object/public/frontend//icon2.png" alt="Logo FinanciePRO">
+  <h1>FinanciePRO 📊</h1>
+  <p>Organize. Economize. Evolua.<br><em>Você no controle do seu dinheiro, de verdade.</em></p>
+  <button class="cta-button" onclick="window.location.href='https://caiopolak.github.io/FinanciePRO/sobre.html'">Ver mais do projeto</button>
 </body>
 </html>
