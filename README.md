@@ -14,6 +14,13 @@ O **FinanciePRO** é um aplicativo de gestão financeira pessoal desenvolvido pa
 
 ---
 
+## 📱 Site de preview (Mockups)
+
+> _([ACESSE AQUI O PREVIEW](https://caiopolak.github.io/FinanciePRO/))_  
+
+---
+
+
 ## 🎯 Funcionalidades
 
 - 📅 **Controle de Despesas e Receitas**  
@@ -22,34 +29,6 @@ O **FinanciePRO** é um aplicativo de gestão financeira pessoal desenvolvido pa
 - 💡 **Dicas diárias de educação financeira**  
 - 🔔 **Alertas de gastos incomuns ou excessivos**  
 - 🔐 **Segurança e privacidade dos seus dados**
-
----
-
-## 🌈 Identidade Visual
-
-| Função           | Cor             | Código Hex |
-| ---------------- | --------------- | ---------- |
-| **Primária**     | Azul petróleo   | `#003f5c`  |
-| **Secundária**   | Verde esmeralda | `#2f9e44`  |
-| **Neutra clara** | Cinza gelo      | `#f4f4f4`  |
-| **Texto escuro** | Cinza grafite   | `#2b2b2b`  |
-| **Atenção**      | Laranja vivo    | `#f8961e`  |
-| **Erro/alerta**  | Vermelho claro  | `#d62828`  |
-
-> 🎨 Gradiente: `#003f5c → #2f9e44`  
-> Ideal para botões, barras de progresso e splash screen.
-
-### 🖋 Tipografia
-
-- Cabeçalhos: **Poppins**
-- Corpo de texto: **Inter**
-- Destaques: **Montserrat** ou **IBM Plex Sans**
-
----
-
-## 📱 Site de preview (Mockups)
-
-> _([clique aqui](https://caiopolak.github.io/FinanciePRO/))_  
 
 ---
 
