@@ -61,6 +61,8 @@ class Database:
                 
             return None, "User record not created"
         except Exception as e:
+            # Registrar erro detalhado
+            print(f"Error creating user: {str(e)}")
             return None, f"Error creating user: {str(e)}"
     
     def get_user_by_id(self, user_id: str) -> Optional[User]:

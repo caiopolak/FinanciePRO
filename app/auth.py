@@ -47,6 +47,9 @@ def register():
         if response.data and len(response.data) > 0:
             user = User(**response.data[0])
         else:
+            # Tenta novamente após um pequeno delay
+            import time
+            time.sleep(0.5)
             user = current_app.db.get_user_by_id(auth_response.user.id)
             if not user:
                 return jsonify({"error": "Falha ao criar registro do usuário"}), 500
@@ -83,8 +86,6 @@ def login():
             "email": email,
             "password": password
         })
-        # GERAR TOKEN JWT DA APLICAÇÃO
-        token = generate_jwt_token(auth_response.user.id)
         
         if not auth_response.user:
             return jsonify({"error": "Credenciais inválidas"}), 401
@@ -93,6 +94,9 @@ def login():
         user = current_app.db.get_user_by_id(auth_response.user.id)
         if not user:
             return jsonify({"error": "Usuário não encontrado"}), 404
+        
+        # GERAR TOKEN JWT DA APLICAÇÃO
+        token = generate_jwt_token(auth_response.user.id)
         
         return jsonify({
             "message": "Login realizado com sucesso",
@@ -138,10 +142,11 @@ def reset_password():
         return jsonify({"error": "Token e nova senha são obrigatórios"}), 400
     
     try:
-        # Usar o token para atualizar a senha
-        response = current_app.db.client.auth.update_user({
-            "password": new_password
-        })
+        # Usar o token para atualizar a senha (abordagem correta)
+        response = current_app.db.client.auth.update_user(
+            access_token=token,
+            attributes={"password": new_password}
+        )
         
         if not response.user:
             return jsonify({"error": "Falha ao atualizar senha"}), 400
