@@ -68,10 +68,20 @@ class Database:
     def get_user_by_id(self, user_id: str) -> Optional[User]:
         try:
             response = self.client.table("users").select("*").eq("id", user_id).execute()
-            return User(**response.data[0]) if response.data else None
+            if response.data and len(response.data) > 0:
+                return User(**response.data[0])
+            return None
         except Exception as e:
             print(f"Error getting user by ID: {str(e)}")
-            return None
+            # Tentar novamente
+            try:
+                response = self.client.table("users").select("*").eq("id", user_id).execute()
+                if response.data and len(response.data) > 0:
+                    return User(**response.data[0])
+                return None
+            except Exception as retry_error:
+                print(f"Retry failed: {str(retry_error)}")
+                return None
     
     def get_user_by_email(self, email: str) -> Optional[User]:
         try:

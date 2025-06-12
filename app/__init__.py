@@ -1,6 +1,6 @@
 import logging
 from flask import Flask, render_template
-from config import Config
+from config import Config # type: ignore
 from .database import Database
 from .payments import PaymentService
 
@@ -10,8 +10,8 @@ def create_app():
     app = Flask(__name__, template_folder='templates')
     app.config.from_object(Config)
     
-    # Configurar logger
-    app.logger.setLevel(logging.INFO)
+    # Configurar logger detalhado
+    app.logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '
@@ -27,10 +27,15 @@ def create_app():
     app.register_blueprint(api_bp, url_prefix='/api')
     
     # Inicializar serviços
-    app.db = db
-    app.payment_service = PaymentService(db)
+    try:
+        app.db = Database()
+        app.logger.info("Database connection established")
+    except Exception as e:
+        app.logger.error(f"Database connection failed: {str(e)}")
+        raise e
     
-    # Rota principal
+    app.payment_service = PaymentService(app.db)
+    
     @app.route('/')
     def index():
         return render_template('index.html')

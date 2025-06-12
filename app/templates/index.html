@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanciePRO - Dashboard</title>
+    <title>FinanciePRO📈 - Gestor Financeiro.</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -680,7 +680,7 @@
     <!-- Mobile Header -->
     <div class="mobile-header">
         <div class="logo">
-            <span>FinanciePRO</span>
+            <span>FinanciePRO📈.</span>
         </div>
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
@@ -693,7 +693,7 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="logo">
-            <span>FinanciePRO</span>
+            <span>FinanciePRO📈.</span>
         </div>
         
         <div class="user-info" id="userInfo">
@@ -1107,7 +1107,7 @@
     <div class="login-overlay" id="loginOverlay">
         <div class="login-container">
             <div class="logo">
-                <span>FinanciePRO</span>
+                <span>FinanciePRO📈.</span>
             </div>
             <form id="loginForm">
                 <div class="form-group">
@@ -1131,7 +1131,7 @@
     <div class="login-overlay" id="registerOverlay">
         <div class="login-container">
             <div class="logo">
-                <span>FinanciePRO</span>
+                <span>FinanciePRO📈.</span>
             </div>
             <form id="registerForm">
                 <div class="form-group">
@@ -1162,7 +1162,7 @@
     <div class="login-overlay" id="forgotPasswordOverlay">
         <div class="login-container">
             <div class="logo">
-                <span>FinanciePRO</span>
+                <span>FinanciePRO📈.</span>
             </div>
             <form id="forgotPasswordForm">
                 <div class="form-group">
@@ -1181,7 +1181,7 @@
     <div class="login-overlay" id="resetPasswordOverlay">
         <div class="login-container">
             <div class="logo">
-                <span>FinanciePRO</span>
+                <span>FinanciePRO📈.</span>
             </div>
             <form id="resetPasswordForm">
                 <div class="form-group">
@@ -1256,7 +1256,7 @@
     
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 FinanciePRO. Todos os direitos reservados.</p>
+        <p>&copy; 2025 FinanciePRO📈. Todos os direitos reservados.</p>
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
@@ -1281,7 +1281,7 @@
             const confirmPassword = document.getElementById('regConfirmPassword').value;
             
             if (password !== confirmPassword) {
-                alert('As senhas não coincidem');
+                showAlert('As senhas não coincidem', 'error');
                 return;
             }
             
@@ -1303,17 +1303,36 @@
                 return response.json();
             })
             .then(data => {
-                alert('Registro realizado com sucesso!');
-                // Redirecionar para login ou fazer login automático
+                showAlert('Registro realizado com sucesso!', 'success');
+                // Login automático após registro
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('userId', data.user.id);
+                authToken = data.token;
+                userId = data.user.id;
+                hideLogin();
+                loadUserData();
+                loadDashboardData();
             })
             .catch(error => {
-                console.error('Registration error:', error);
-                alert(error.message || 'Erro ao registrar');
+                showAlert(error.message || 'Erro ao registrar', 'error');
             })
             .finally(() => {
                 loadingOverlay.style.display = 'none';
             });
         });
+
+        // Função para exibir alertas
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            document.body.prepend(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
 
         // Variáveis globais
         let authToken = localStorage.getItem('authToken');

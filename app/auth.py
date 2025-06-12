@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, request, jsonify, current_app, session, redirect, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime, timedelta
 import jwt
-import os
+import time
 from typing import Optional, Dict
 from .models import User, UserPlan
 
@@ -19,7 +18,7 @@ def register():
         return jsonify({"error": "Email, senha e nome são obrigatórios"}), 400
     
     try:
-        # Criar usuário diretamente no Supabase Auth
+        # Criar usuário no Supabase Auth
         auth_response = current_app.db.client.auth.sign_up({
             "email": email,
             "password": password,
@@ -32,7 +31,10 @@ def register():
         
         if not auth_response.user:
             return jsonify({"error": "Falha ao criar usuário"}), 500
-            
+        
+        # Esperar a criação do usuário
+        time.sleep(2)
+        
         # Criar registro na tabela users
         user_data = {
             "id": str(auth_response.user.id),
@@ -44,15 +46,14 @@ def register():
         
         response = current_app.db.client.table("users").insert(user_data).execute()
         
-        if response.data and len(response.data) > 0:
-            user = User(**response.data[0])
-        else:
-            # Tenta novamente após um pequeno delay
-            import time
-            time.sleep(0.5)
-            user = current_app.db.get_user_by_id(auth_response.user.id)
-            if not user:
+        if not response.data:
+            # Tentar novamente se falhar
+            time.sleep(1)
+            response = current_app.db.client.table("users").insert(user_data).execute()
+            if not response.data:
                 return jsonify({"error": "Falha ao criar registro do usuário"}), 500
+        
+        user = User(**response.data[0])
         
         # Gerar token JWT
         token = generate_jwt_token(auth_response.user.id)
@@ -95,7 +96,7 @@ def login():
         if not user:
             return jsonify({"error": "Usuário não encontrado"}), 404
         
-        # GERAR TOKEN JWT DA APLICAÇÃO
+        # Gerar token JWT
         token = generate_jwt_token(auth_response.user.id)
         
         return jsonify({
@@ -109,19 +110,12 @@ def login():
             }
         }), 200
     except Exception as e:
+        current_app.logger.error(f"Erro no login: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@auth_bp.route('/logout', methods=['POST'])
-def logout():
-    session.clear()
-    return jsonify({"message": "Deslogado com sucesso!"}), 200
-
-@auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+@auth_bp.route('/forgot-password', methods=['POST'])
 def forgot_password():
-    if request.method == 'GET':
-        return render_template('forgot_password.html')
-    
-    email = request.get_json().get('email') if request.is_json else request.form.get('email')
+    email = request.get_json().get('email')
     
     if not email:
         return jsonify({"error": "Email é necessário"}), 400
@@ -142,15 +136,12 @@ def reset_password():
         return jsonify({"error": "Token e nova senha são obrigatórios"}), 400
     
     try:
-        # Usar o token para atualizar a senha (abordagem correta)
-        response = current_app.db.client.auth.update_user(
-            access_token=token,
-            attributes={"password": new_password}
+        # Método correto para redefinição de senha
+        response = current_app.db.client.auth.reset_password(
+            token=token,
+            password=new_password
         )
         
-        if not response.user:
-            return jsonify({"error": "Falha ao atualizar senha"}), 400
-            
         return jsonify({"message": "Senha atualizada com sucesso"}), 200
     except Exception as e:
         print(f"Error resetting password: {str(e)}")
@@ -162,7 +153,6 @@ def generate_jwt_token(user_id: str) -> str:
         "iat": datetime.utcnow(),
         "exp": datetime.utcnow() + timedelta(days=7)
     }
-    
     return jwt.encode(payload, current_app.config['JWT_SECRET_KEY'], algorithm="HS256")
 
 def verify_jwt_token(token: str) -> Optional[Dict]:
