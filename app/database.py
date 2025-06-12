@@ -7,7 +7,7 @@ import calendar
 import os
 from supabase import create_client, Client
 from datetime import datetime, timedelta
-from typing import Any, Optional, List, Dict
+from typing import Any, Optional, List, Dict, Tuple
 
 class Database:
     def __init__(self):

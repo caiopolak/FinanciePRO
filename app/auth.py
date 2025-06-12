@@ -84,7 +84,7 @@ def login():
             "password": password
         })
         # GERAR TOKEN JWT DA APLICAÇÃO
-        token = generate_jwt_token(auth_response.user.id)  # <--- Adicione esta linha
+        token = generate_jwt_token(auth_response.user.id)
         
         if not auth_response.user:
             return jsonify({"error": "Credenciais inválidas"}), 401
@@ -96,7 +96,7 @@ def login():
         
         return jsonify({
             "message": "Login realizado com sucesso",
-            "token": token,  # <--- Usar token JWT gerado
+            "token": token,
             "user": {
                 "id": user.id,
                 "email": user.email,
@@ -158,13 +158,13 @@ def generate_jwt_token(user_id: str) -> str:
         "exp": datetime.utcnow() + timedelta(days=7)
     }
     
-    return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm="HS256")
+    return jwt.encode(payload, current_app.config['JWT_SECRET_KEY'], algorithm="HS256")
 
 def verify_jwt_token(token: str) -> Optional[Dict]:
     try:
         payload = jwt.decode(
             token, 
-            current_app.config['JWT_SECRET_KEY'],  # <--- Usar chave correta
+            current_app.config['JWT_SECRET_KEY'],
             algorithms=["HS256"]
         )
         return payload

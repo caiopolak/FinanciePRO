@@ -1,4 +1,5 @@
-from flask import Flask, logging, render_template
+import logging
+from flask import Flask
 from config import Config
 from .database import Database
 from .payments import PaymentService
