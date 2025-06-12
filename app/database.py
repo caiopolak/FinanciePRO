@@ -18,9 +18,12 @@ class Database:
         self.client: Client = create_client(url, key)
     
     # Operações de usuário
-    def create_user(self, email: str, password: str, name: str) -> Optional[User]:
+    def create_user(self, email: str, password: str, name: str) -> Tuple[Optional[User], Optional[str]]:
         try:
-            # Criar usuário no Auth
+            # Validação básica
+            if not email or not password or not name:
+                return None, "Missing required fields"
+                
             auth_response = self.client.auth.sign_up({
                 "email": email,
                 "password": password,
@@ -33,10 +36,8 @@ class Database:
             })
             
             if not auth_response.user:
-                print("Auth response:", auth_response)
-                return None
+                return None, "Failed to create auth user"
                 
-            # Criar registro na tabela users
             user_data = {
                 "id": str(auth_response.user.id),
                 "email": email,
@@ -50,25 +51,22 @@ class Database:
             
             response = self.client.table("users").insert(user_data).execute()
             
-            if response.data and len(response.data) > 0:
-                return User(**response.data[0])
+            if response.data:
+                return User(**response.data[0]), None
             
-            # Se não retornar dados, buscar usuário criado
+            # Fallback: Buscar usuário se insert não retornar dados
             user = self.get_user_by_id(auth_response.user.id)
             if user:
-                return user
+                return user, None
                 
-            return None
+            return None, "User record not created"
         except Exception as e:
-            print(f"Error creating user: {str(e)}")
-            return None
+            return None, f"Error creating user: {str(e)}"
     
     def get_user_by_id(self, user_id: str) -> Optional[User]:
         try:
             response = self.client.table("users").select("*").eq("id", user_id).execute()
-            if response.data and len(response.data) > 0:
-                return User(**response.data[0])
-            return None
+            return User(**response.data[0]) if response.data else None
         except Exception as e:
             print(f"Error getting user by ID: {str(e)}")
             return None
@@ -76,57 +74,63 @@ class Database:
     def get_user_by_email(self, email: str) -> Optional[User]:
         try:
             response = self.client.table("users").select("*").eq("email", email).execute()
-            if response.data and len(response.data) > 0:
-                return User(**response.data[0])
-            return None
+            return User(**response.data[0]) if response.data else None
         except Exception as e:
             print(f"Error getting user by email: {str(e)}")
             return None
     
-    def update_user(self, user_id: str, **kwargs) -> bool:
+    def update_user(self, user_id: str, **kwargs) -> Tuple[bool, Optional[str]]:
         try:
-            # Remover campos que não devem ser atualizados
-            restricted_fields = ['id', 'email', 'created_at']
+            restricted_fields = {'id', 'email', 'created_at'}
             update_data = {k: v for k, v in kwargs.items() if k not in restricted_fields}
             
+            if not update_data:
+                return False, "No valid fields to update"
+                
             response = self.client.table("users").update(update_data).eq("id", user_id).execute()
-            return True if response.data else False
+            return bool(response.data), None
         except Exception as e:
-            print(f"Error updating user: {str(e)}")
-            return False
+            return False, f"Error updating user: {str(e)}"
     
     # Operações de transação
-    def add_transaction(self, user_id: str, transaction_data: Dict[str, Any]) -> Optional[Transaction]:
+    def add_transaction(self, user_id: str, transaction_data: Dict[str, Any]) -> Tuple[Optional[Transaction], Optional[str]]:
         try:
-            # Verificar limite do plano
-            if not self.check_plan_limits(user_id, "transactions"):
-                return None
+            # Verificação de limite do plano
+            limit_ok, error = self.check_plan_limits(user_id, "transactions")
+            if not limit_ok:
+                return None, error or "Plan limit exceeded"
                 
-            # Validar dados
-            required_fields = ['type', 'amount', 'date', 'category']
-            if not all(field in transaction_data for field in required_fields):
-                raise ValueError("Missing required transaction fields")
+            # Validação de campos
+            required_fields = {'type', 'amount', 'date', 'category'}
+            if missing := required_fields - set(transaction_data.keys()):
+                return None, f"Missing fields: {', '.join(missing)}"
+                
+            if transaction_data['amount'] <= 0:
+                return None, "Amount must be positive"
                 
             transaction_data["user_id"] = user_id
             response = self.client.table("transactions").insert(transaction_data).execute()
             
-            if response.data and len(response.data) > 0:
-                return Transaction(**response.data[0])
-            return None
+            if response.data:
+                return Transaction(**response.data[0]), None
+            return None, "Failed to create transaction"
         except Exception as e:
-            print(f"Error adding transaction: {str(e)}")
-            return None
+            return None, f"Error adding transaction: {str(e)}"
     
     def get_transactions(self, user_id: str, month: int = None, year: int = None) -> List[Transaction]:
-        query = self.client.table("transactions").select("*").eq("user_id", user_id)
-        
-        if month and year:
-            start_date = f"{year}-{month:02d}-01"
-            end_date = f"{year}-{month:02d}-{calendar.monthrange(year, month)[1]}"
-            query = query.gte("date", start_date).lte("date", end_date)
-        
-        response = query.order("date", desc=True).execute()
-        return [Transaction(**t) for t in response.data] if response.data else []
+        try:
+            query = self.client.table("transactions").select("*").eq("user_id", user_id)
+            
+            if month and year:
+                start_date = f"{year}-{month:02d}-01"
+                end_date = f"{year}-{month:02d}-{calendar.monthrange(year, month)[1]}"
+                query = query.gte("date", start_date).lte("date", end_date)
+            
+            response = query.order("date", desc=True).execute()
+            return [Transaction(**t) for t in response.data]
+        except Exception as e:
+            print(f"Error getting transactions: {e}")
+            return []
     
     def get_transaction_by_id(self, transaction_id: str) -> Optional[Transaction]:
         try:
@@ -191,18 +195,25 @@ class Database:
         return [{"category": k, "sum": v} for k, v in summary.items()]
     
     # Operações de metas
-    def add_goal(self, user_id: str, goal_data: Dict) -> Optional[Goal]:
+    def add_goal(self, user_id: str, goal_data: Dict) -> Tuple[Optional[Goal], Optional[str]]:
         try:
-            # Verificar limite do plano
-            if not self.check_plan_limits(user_id, "goals"):
-                return None
+            # Verificação de limite
+            limit_ok, error = self.check_plan_limits(user_id, "goals")
+            if not limit_ok:
+                return None, error or "Plan limit exceeded"
+                
+            # Validação
+            if goal_data.get('target_amount', 0) <= 0:
+                return None, "Target amount must be positive"
                 
             goal_data["user_id"] = user_id
             response = self.client.table("goals").insert(goal_data).execute()
-            return Goal(**response.data[0]) if response.data else None
+            
+            if response.data:
+                return Goal(**response.data[0]), None
+            return None, "Failed to create goal"
         except Exception as e:
-            print(f"Error adding goal: {e}")
-            return None
+            return None, f"Error adding goal: {e}"
     
     def get_goals(self, user_id: str) -> List[Goal]:
         response = self.client.table("goals").select("*").eq("user_id", user_id).order("priority", desc=True).execute()
@@ -226,20 +237,19 @@ class Database:
             print(f"Error updating goal: {e}")
             return False
     
-    def update_goal_progress(self, goal_id: str, amount: float) -> bool:
+    def update_goal_progress(self, goal_id: str, amount: float) -> Tuple[bool, Optional[str]]:
         try:
-            goal = self.get_goal_by_id(goal_id)
-            if not goal:
-                return False
-                
-            new_amount = goal.current_amount + amount
-            response = self.client.table("goals").update({
-                "current_amount": new_amount
-            }).eq("id", goal_id).execute()
-            return True if response.data else False
+            # Usar operação atômica do Supabase
+            response = self.client.rpc(
+                "increment_goal", 
+                {"goal_id": goal_id, "inc_amount": amount}
+            ).execute()
+            
+            if response.data:
+                return True, None
+            return False, "Update failed"
         except Exception as e:
-            print(f"Error updating goal: {e}")
-            return False
+            return False, f"Error updating goal: {e}"
     
     def delete_goal(self, goal_id: str) -> bool:
         try:
@@ -451,24 +461,49 @@ class Database:
             return False
     
     # Verificação de limites do plano
-    def check_plan_limits(self, user_id: str, feature: str) -> bool:
-        user = self.get_user_by_id(user_id)
-        if not user:
-            return False
-        
-        if user.plan == UserPlan.FREE:
-            if feature == "transactions":
-                # Limite de 100 transações/mês para plano free
+    def check_plan_limits(self, user_id: str, feature: str) -> Tuple[bool, Optional[str]]:
+        try:
+            user = self.get_user_by_id(user_id)
+            if not user:
+                return False, "User not found"
+            
+            if user.plan == UserPlan.FREE.value:
                 today = datetime.utcnow()
                 first_day = today.replace(day=1)
                 last_day = (today.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
                 
-                response = self.client.table("transactions").select("id", count="exact").eq("user_id", user_id).gte("date", first_day.isoformat()).lte("date", last_day.isoformat()).execute()
-                
-                return response.count < 100 if response.count is not None else True
-            elif feature == "goals":
-                # Limite de 3 metas para plano free
-                response = self.client.table("goals").select("id", count="exact").eq("user_id", user_id).execute()
-                return response.count < 3 if response.count is not None else True
-        
-        return True
+                if feature == "transactions":
+                    response = self.client.table("transactions").select(
+                        "id", 
+                        count="exact"
+                    ).eq("user_id", user_id).gte(
+                        "date", first_day.isoformat()
+                    ).lte(
+                        "date", last_day.isoformat()
+                    ).execute()
+                    
+                    if response.count >= 100:
+                        return False, "Free plan limit: 100 transactions/month"
+                        
+                elif feature == "goals":
+                    response = self.client.table("goals").select(
+                        "id", 
+                        count="exact"
+                    ).eq("user_id", user_id).execute()
+                    
+                    if response.count >= 3:
+                        return False, "Free plan limit: 3 goals"
+            
+            return True, None
+        except Exception as e:
+            return False, f"Error checking limits: {str(e)}"
+
+# Adicione esta função RPC no Supabase (SQL):
+"""
+CREATE OR REPLACE FUNCTION increment_goal(goal_id UUID, inc_amount FLOAT)
+RETURNS VOID AS $$
+UPDATE goals
+SET current_amount = current_amount + inc_amount
+WHERE id = goal_id;
+$$ LANGUAGE SQL;
+"""

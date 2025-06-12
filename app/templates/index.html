@@ -199,6 +199,30 @@
             color: var(--color-danger);
         }
 
+        /* Adicione estas novas classes para erros */
+        .error-message {
+            color: #d62828;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .plan-limit-alert {
+            background-color: rgba(214, 40, 40, 0.1);
+            border-left: 4px solid #d62828;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: var(--radius-sm);
+        }
+        
+        .upgrade-prompt {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }        
+
+
         .nav-menu {
             display: flex;
             flex-direction: column;
@@ -1237,7 +1261,18 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script>
-
+        // Função utilitária para tratar respostas da API
+        function handleApiResponse(response) {
+            return response.json().then(data => {
+                if (!response.ok) {
+                    throw new Error(data.error || `Erro ${response.status}: ${response.statusText}`);
+                }
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                return data;
+            });
+        }
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
@@ -1439,6 +1474,7 @@
         });
 
         // Evento de registro
+        // Evento de registro
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
@@ -1460,30 +1496,21 @@
                 },
                 body: JSON.stringify({ name, email, password })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao registrar');
-                }
-                return response.json();
-            })
+            .then(handleApiResponse)
             .then(data => {
-                // Armazenar token e dados do usuário
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('userId', data.user.id);
                 localStorage.setItem('userName', data.user.name);
                 localStorage.setItem('userPlan', data.user.plan);
                 
-                // Atualizar variáveis globais
                 authToken = data.token;
                 userId = data.user.id;
                 userName = data.user.name;
                 userPlan = data.user.plan;
                 
-                // Esconder overlays
                 hideLogin();
                 loadingOverlay.style.display = 'none';
                 
-                // Carregar dados
                 loadUserData();
                 loadDashboardData();
                 loadUnreadNotifications();
@@ -1565,6 +1592,226 @@
             });
         });
 
+        function showPlanLimitAlert(feature, message) {
+            // Remove alertas existentes
+            document.querySelectorAll('.plan-limit-alert').forEach(el => el.remove());
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'plan-limit-alert';
+            alertDiv.innerHTML = `
+                <div>
+                    <strong><i class="fas fa-exclamation-triangle"></i> Limite do Plano Atingido!</strong>
+                    <p>${message}</p>
+                </div>
+                <div class="upgrade-prompt">
+                    <span>Atualize seu plano para continuar usando este recurso.</span>
+                    <button class="btn btn-primary" id="upgradePlanBtn">
+                        <i class="fas fa-crown"></i> Atualizar Plano
+                    </button>
+                </div>
+            `;
+            
+            // Insere o alerta antes do botão de ação
+            const addButton = document.getElementById('addTransactionBtn');
+            if (addButton) {
+                addButton.parentElement.before(alertDiv);
+            } else {
+                document.querySelector('.header').after(alertDiv);
+            }
+            
+            // Adiciona evento ao botão de upgrade
+            document.getElementById('upgradePlanBtn').addEventListener('click', function() {
+                loadView('subscription');
+            });
+        }
+
+        function saveTransaction(e) {
+            e.preventDefault();
+            
+            const transactionId = document.getElementById('transactionId').value;
+            const type = document.getElementById('transactionType').value;
+            const amount = parseFloat(document.getElementById('transactionAmount').value);
+            const date = document.getElementById('transactionDate').value;
+            const category = document.getElementById('transactionCategory').value;
+            const description = document.getElementById('transactionDescription').value;
+            const recurring = document.getElementById('transactionRecurring').checked;
+            
+            const transactionData = {
+                type,
+                amount,
+                date,
+                category,
+                description,
+                recurring
+            };
+            
+            loadingOverlay.style.display = 'flex';
+            hideTransactionModal();
+            
+            let url = '/api/transactions';
+            let method = 'POST';
+            
+            if (transactionId) {
+                url = `/api/transactions/${transactionId}`;
+                method = 'PUT';
+            }
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(transactionData)
+            })
+            .then(handleApiResponse)
+            .then(data => {
+                loadingOverlay.style.display = 'none';
+                loadTransactions();
+            })
+            .catch(error => {
+                loadingOverlay.style.display = 'none';
+                
+                // Tratamento específico para limites de plano
+                if (error.message.includes('limite')) {
+                    showPlanLimitAlert('transactions', error.message);
+                } else {
+                    alert(error.message);
+                }
+            });
+        }
+
+        function addGoal(goalData) {
+            loadingOverlay.style.display = 'flex';
+            
+            fetch('/api/goals', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(goalData)
+            })
+            .then(handleApiResponse)
+            .then(data => {
+                loadingOverlay.style.display = 'none';
+                loadGoals();
+            })
+            .catch(error => {
+                loadingOverlay.style.display = 'none';
+                
+                // Tratamento específico para limites de plano
+                if (error.message.includes('limite')) {
+                    showPlanLimitAlert('goals', error.message);
+                } else {
+                    alert(error.message);
+                }
+            });
+        }
+
+        function updateGoalProgress(goalId, amount) {
+            loadingOverlay.style.display = 'flex';
+            
+            fetch(`/api/goals/${goalId}/progress`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount })
+            })
+            .then(handleApiResponse)
+            .then(data => {
+                loadingOverlay.style.display = 'none';
+                loadGoals();
+            })
+            .catch(error => {
+                loadingOverlay.style.display = 'none';
+                alert(error.message);
+            });
+        }
+
+        function loadSubscription() {
+            loadingOverlay.style.display = 'flex';
+            
+            fetch('/api/subscription', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+            .then(handleApiResponse)
+            .then(subscription => {
+                const subscriptionInfo = document.getElementById('subscriptionInfo');
+                const plansGrid = document.getElementById('plansGrid');
+                
+                // ... (código existente) ...
+                
+                // Atualize para mostrar os limites do plano
+                const planLimits = {
+                    free: {
+                        transactions: '100 transações/mês',
+                        goals: '3 metas'
+                    },
+                    pro: {
+                        transactions: '500 transações/mês',
+                        goals: '20 metas'
+                    },
+                    business: {
+                        transactions: 'Ilimitadas',
+                        goals: 'Ilimitadas'
+                    }
+                };
+
+                plansGrid.innerHTML = `
+                    <div class="plan-card">
+                        <h4>Plano Grátis</h4>
+                        <p class="price">R$ 0,00/mês</p>
+                        <ul>
+                            <li>${planLimits.free.transactions}</li>
+                            <li>${planLimits.free.goals}</li>
+                            <li>Relatórios básicos</li>
+                        </ul>
+                        <div class="current-plan" ${userPlan !== 'free' ? 'style="display:none;"' : ''}>
+                            <i class="fas fa-check-circle"></i> Seu plano atual
+                        </div>
+                    </div>
+                    <div class="plan-card">
+                        <h4>Plano PRO</h4>
+                        <p class="price">R$ 29,90/mês</p>
+                        <ul>
+                            <li>${planLimits.pro.transactions}</li>
+                            <li>${planLimits.pro.goals}</li>
+                            <li>Relatórios detalhados</li>
+                            <li>Suporte prioritário</li>
+                        </ul>
+                        <button class="btn btn-primary select-plan" data-plan="pro" ${userPlan === 'pro' ? 'disabled' : ''}>
+                            ${userPlan === 'pro' ? 'Plano Atual' : 'Selecionar'}
+                        </button>
+                    </div>
+                    <div class="plan-card">
+                        <h4>Plano Business</h4>
+                        <p class="price">R$ 99,90/mês</p>
+                        <ul>
+                            <li>${planLimits.business.transactions}</li>
+                            <li>${planLimits.business.goals}</li>
+                            <li>Relatórios avançados</li>
+                            <li>Suporte 24/7</li>
+                            <li>Integrações com bancos</li>
+                        </ul>
+                        <button class="btn btn-primary select-plan" data-plan="business" ${userPlan === 'business' ? 'disabled' : ''}>
+                            ${userPlan === 'business' ? 'Plano Atual' : 'Selecionar'}
+                        </button>
+                    </div>
+                `;
+                
+            })
+            .catch(error => {
+                loadingOverlay.style.display = 'none';
+                alert(error.message);
+            });
+        }        
+
         function setupMobileMenu() {
             mobileMenuBtn.addEventListener('click', function() {
                 sidebar.classList.add('active');
@@ -1577,6 +1824,25 @@
             });
         }
 
+        // Atualize a função checkPlanLimits para usar a nova API
+        function checkPlanLimits(feature) {
+            return fetch(`/api/plan/limits?feature=${feature}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+            .then(handleApiResponse)
+            .then(data => {
+                return data.available;
+            })
+            .catch(error => {
+                console.error('Erro ao verificar limites:', error);
+                return false;
+            });
+        }        
+
+        
         function setupEventListeners() {
             logoutBtn.addEventListener('click', function(e) {
                 e.preventDefault();
