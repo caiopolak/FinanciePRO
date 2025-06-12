@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanciePro - Documentação</title>
+    <style>
+        :root {
+            --color-primary: #003f5c;
+            --color-secondary: #2f9e44;
+            --color-light: #f4f4f4;
+            --color-dark: #2b2b2b;
+            --color-warning: #f8961e;
+            --color-danger: #d62828;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--color-dark);
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            background-color: var(--color-dark);
+            padding: 15px 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        nav li {
+            margin: 0 15px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: var(--color-primary);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        section {
+            padding: 40px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1, h2, h3 {
+            color: var(--color-primary);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #248f3a;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        footer {
+            background-color: var(--color-dark);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>FinanciePro</h1>
+            <p>Sistema Completo de Gestão Financeira Pessoal</p>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#overview">Visão Geral</a></li>
+            <li><a href="#installation">Instalação</a></li>
+            <li><a href="#supabase">Supabase</a></li>
+            <li><a href="#api">API</a></li>
+            <li><a href="#flows">Fluxos</a></li>
+            <li><a href="#future">Futuro</a></li>
+        </ul>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <h2>Documentação Completa</h2>
+            <p>Tudo o que você precisa para configurar, usar e expandir o FinanciePro</p>
+            <a href="#installation" class="btn">Começar</a>
+        </div>
+    </section>
+    
+    <div class="container">
+        <section id="overview">
+            <h2>Visão Geral do Sistema</h2>
+            <div class="card">
+                <h3>O que é o FinanciePro?</h3>
+                <p>O FinanciePro é um sistema completo de gestão financeira pessoal que oferece:</p>
+                <ul>
+                    <li>Controle de receitas e despesas</li>
+                    <li>Metas financeiras</li>
+                    <li>Investimentos</li>
+                    <li>Orçamentos mensais</li>
+                    <li>Sistema de assinaturas com planos FREE, PRO e BUSINESS</li>
+                    <li>Dashboard completo com gráficos e relatórios</li>
+                </ul>
+                
+                <h3>Tecnologias Utilizadas</h3>
+                <div class="tech-stack">
+                    <div>
+                        <h4>Backend</h4>
+                        <ul>
+                            <li>Python + Flask</li>
+                            <li>Supabase (Banco de dados)</li>
+                            <li>Stripe (Pagamentos)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Frontend</h4>
+                        <ul>
+                            <li>HTML5, CSS3, JavaScript</li>
+                            <li>Chart.js (Gráficos)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="installation">
+            <h2>Instalação e Configuração</h2>
+            <div class="card">
+                <h3>Pré-requisitos</h3>
+                <ul>
+                    <li>Python 3.8 ou superior</li>
+                    <li>Pip (Gerenciador de pacotes Python)</li>
+                    <li>Conta no Supabase</li>
+                    <li>Conta no Stripe (para pagamentos)</li>
+                </ul>
+                
+                <h3>Passo a Passo</h3>
+                <ol>
+                    <li>
+                        <strong>Clonar o repositório</strong>
+                        <pre><code>git clone https://github.com/seu-usuario/financiepro.git
+cd financiepro</code></pre>
+                    </li>
+                    <li>
+                        <strong>Criar ambiente virtual (recomendado)</strong>
+                        <pre><code>python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate  # Windows</code></pre>
+                    </li>
+                    <li>
+                        <strong>Instalar dependências</strong>
+                        <pre><code>pip install -r requirements.txt</code></pre>
+                    </li>
+                    <li>
+                        <strong>Configurar variáveis de ambiente</strong>
+                        <p>Crie um arquivo <code>.env</code> na raiz do projeto com:</p>
+                        <pre><code>SUPABASE_URL=seu_url_supabase
+SUPABASE_KEY=seu_key_supabase
+STRIPE_SECRET_KEY=seu_secret_key_stripe
+STRIPE_PUBLIC_KEY=seu_public_key_stripe
+SECRET_KEY=sua_chave_secreta</code></pre>
+                    </li>
+                    <li>
+                        <strong>Executar a aplicação</strong>
+                        <pre><code>python run.py</code></pre>
+                        <p>A aplicação estará disponível em <code>http://localhost:5000</code></p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="supabase">
+            <h2>Configuração do Supabase</h2>
+            <div class="card">
+                <h3>Criando as Tabelas Necessárias</h3>
+                <p>O FinanciePro requer as seguintes tabelas no Supabase:</p>
+                
+                <h4>1. Tabela users</h4>
+                <pre><code>CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT,
+    name TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    plan TEXT NOT NULL DEFAULT 'free',
+    subscription_id TEXT,
+    currency TEXT DEFAULT 'R$',
+    risk_profile TEXT DEFAULT 'moderate',
+    notification_pref BOOLEAN DEFAULT TRUE,
+    stripe_customer_id TEXT
+);</code></pre>
+                
+                <h4>2. Tabela transactions</h4>
+                <pre><code>CREATE TABLE transactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    type TEXT NOT NULL CHECK (type IN ('income', 'expense')),
+    amount NUMERIC(10, 2) NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT,
+    date DATE NOT NULL,
+    recurring BOOLEAN DEFAULT FALSE
+);</code></pre>
+                
+                <h4>3. Tabela goals</h4>
+                <pre><code>CREATE TABLE goals (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    target_amount NUMERIC(10, 2) NOT NULL,
+    current_amount NUMERIC(10, 2) DEFAULT 0,
+    target_date DATE NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high'))
+);</code></pre>
+                
+                <h4>4. Tabela investments</h4>
+                <pre><code>CREATE TABLE investments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('stocks', 'bonds', 'crypto', 'real_estate', 'funds', 'others')),
+    amount NUMERIC(10, 2) NOT NULL,
+    expected_return NUMERIC(5, 2),
+    date DATE NOT NULL,
+    notes TEXT
+);</code></pre>
+                
+                <h4>5. Tabela budgets</h4>
+                <pre><code>CREATE TABLE budgets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    category TEXT NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
+    month INTEGER NOT NULL CHECK (month BETWEEN 1 AND 12),
+    year INTEGER NOT NULL
+);</code></pre>
+                
+                <h4>6. Tabela notifications</h4>
+                <pre><code>CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    date TIMESTAMPTZ DEFAULT NOW(),
+    read BOOLEAN DEFAULT FALSE
+);</code></pre>
+                
+                <h4>7. Tabela subscriptions</h4>
+                <pre><code>CREATE TABLE subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    plan TEXT NOT NULL CHECK (plan IN ('free', 'pro', 'business')),
+    status TEXT NOT NULL CHECK (status IN ('active', 'canceled', 'expired', 'pending')),
+    start_date TIMESTAMPTZ NOT NULL,
+    end_date TIMESTAMPTZ,
+    payment_method TEXT NOT NULL CHECK (payment_method IN ('credit_card', 'pix', 'bank_transfer')),
+    stripe_subscription_id TEXT
+);</code></pre>
+                
+                <h3>Função RPC para Incremento de Metas</h3>
+                <p>Adicione esta função no SQL Editor do Supabase:</p>
+                <pre><code>CREATE OR REPLACE FUNCTION increment_goal(goal_id UUID, inc_amount FLOAT)
+RETURNS VOID AS $$
+UPDATE goals
+SET current_amount = current_amount + inc_amount
+WHERE id = goal_id;
+$$ LANGUAGE SQL;</code></pre>
+                
+                <h3>Configuração de Autenticação</h3>
+                <p>No Supabase, ative o sistema de autenticação:</p>
+                <ol>
+                    <li>Vá para "Authentication" no menu lateral</li>
+                    <li>Ative "Email" como provedor</li>
+                    <li>Configure as URLs de redirecionamento (callback) para sua aplicação</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="api">
+            <h2>Documentação da API</h2>
+            <div class="card">
+                <h3>Autenticação</h3>
+                <p>Todas as requisições (exceto login/registro) devem incluir o token JWT no header:</p>
+                <pre><code>Authorization: Bearer &lt;seu_token&gt;</code></pre>
+                
+                <h3>Endpoints Principais</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Endpoint</th>
+                            <th>Método</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/auth/register</code></td>
+                            <td>POST</td>
+                            <td>Registrar novo usuário</td>
+                        </tr>
+                        <tr>
+                            <td><code>/auth/login</code></td>
+                            <td>POST</td>
+                            <td>Login do usuário</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/transactions</code></td>
+                            <td>GET</td>
+                            <td>Listar transações</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/transactions</code></td>
+                            <td>POST</td>
+                            <td>Criar nova transação</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/goals</code></td>
+                            <td>GET</td>
+                            <td>Listar metas</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/investments</code></td>
+                            <td>GET</td>
+                            <td>Listar investimentos</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/budgets</code></td>
+                            <td>GET</td>
+                            <td>Listar orçamentos</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/dashboard/summary</code></td>
+                            <td>GET</td>
+                            <td>Resumo do dashboard</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/subscription</code></td>
+                            <td>POST</td>
+                            <td>Criar assinatura</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Exemplo de Requisição</h3>
+                <p>Adicionar uma nova transação:</p>
+                <pre><code>POST /api/transactions
+Headers:
+  Authorization: Bearer seu_token_jwt
+  Content-Type: application/json
+
+Body:
+{
+  "type": "expense",
+  "amount": 150.50,
+  "category": "Alimentação",
+  "description": "Supermercado",
+  "date": "2023-11-15"
+}</code></pre>
+                
+                <h3>Limites de Plano</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recurso</th>
+                            <th>FREE</th>
+                            <th>PRO</th>
+                            <th>BUSINESS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Transações/mês</td>
+                            <td>100</td>
+                            <td>Ilimitado</td>
+                            <td>Ilimitado</td>
+                        </tr>
+                        <tr>
+                            <td>Metas</td>
+                            <td>3</td>
+                            <td>10</td>
+                            <td>Ilimitado</td>
+                        </tr>
+                        <tr>
+                            <td>Investimentos</td>
+                            <td>5</td>
+                            <td>20</td>
+                            <td>Ilimitado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <section id="flows">
+            <h2>Fluxos Principais</h2>
+            <div class="card">
+                <h3>1. Registro e Autenticação</h3>
+                <ol>
+                    <li>Usuário se registra com email, senha e nome</li>
+                    <li>Sistema cria conta no Supabase Auth</li>
+                    <li>Registro é criado na tabela users</li>
+                    <li>Token JWT é gerado e retornado</li>
+                </ol>
+                
+                <h3>2. Adição de Transação</h3>
+                <ol>
+                    <li>Verifica limite do plano</li>
+                    <li>Valida campos obrigatórios</li>
+                    <li>Insere transação no banco de dados</li>
+                    <li>Atualiza orçamentos e metas relacionadas</li>
+                </ol>
+                
+                <h3>3. Assinatura de Plano</h3>
+                <ol>
+                    <li>Usuário seleciona plano (PRO ou BUSINESS)</li>
+                    <li>Sistema cria cliente no Stripe (se não existir)</li>
+                    <li>Cria assinatura no Stripe</li>
+                    <li>Registra assinatura no banco de dados</li>
+                    <li>Atualiza plano do usuário</li>
+                </ol>
+                
+                <h3>4. Webhooks do Stripe</h3>
+                <ol>
+                    <li>Pagamento bem-sucedido: mantém assinatura ativa</li>
+                    <li>Pagamento falhou: muda status para expirado</li>
+                    <li>Assinatura cancelada: reverte usuário para FREE</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="future">
+            <h2>Futuras Atualizações</h2>
+            <div class="card">
+                <h3>Roadmap</h3>
+                <ul>
+                    <li><strong>Versão 5.0</strong>
+                        <ul>
+                            <li>Relatórios PDF personalizados</li>
+                            <li>Integração com bancos brasileiros</li>
+                            <li>App mobile nativo</li>
+                        </ul>
+                    </li>
+                    <li><strong>Versão 6.0</strong>
+                        <ul>
+                            <li>Inteligência Artificial para recomendações</li>
+                            <li>Planejamento tributário</li>
+                            <li>Análise de carteira de investimentos</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Melhorias Sugeridas</h3>
+                <ul>
+                    <li>Cache para melhorar performance do dashboard</li>
+                    <li>Exportação de dados em Excel e PDF</li>
+                    <li>Notificações por e-mail</li>
+                    <li>Autenticação de dois fatores</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>FinanciePro &copy; 2023 - Sistema de Gestão Financeira</p>
+            <p>Documentação atualizada em Novembro de 2023</p>
+        </div>
+    </footer>
+</body>
+</html>
