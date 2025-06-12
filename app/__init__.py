@@ -1,5 +1,5 @@
 import logging
-from flask import Flask
+from flask import Flask, render_template
 from config import Config
 from .database import Database
 from .payments import PaymentService
