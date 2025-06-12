@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import jwt
 import time
 from typing import Optional, Dict
-from .models import User, UserPlan
+from .models import UserPlan
 
 auth_bp = Blueprint('auth', __name__)
 
