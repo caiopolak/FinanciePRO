@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - FinanciePRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #003f5c;
+            --color-secondary: #2f9e44;
+            --color-light: #f4f4f4;
+            --color-dark: #2b2b2b;
+            --color-warning: #f8961e;
+            --color-danger: #d62828;
+            --color-text: #333;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text);
+            background: linear-gradient(to bottom right, var(--color-primary), var(--color-secondary));
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            box-shadow: var(--shadow-lg);
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--color-light);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slogan {
+            font-family: 'Poppins', sans-serif;
+            font-style: italic;
+            color: var(--color-secondary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .author {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .nav-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .nav-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-btn i {
+            font-size: 1.2rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            background: var(--color-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h2 i {
+            font-size: 1.8rem;
+            color: var(--color-secondary);
+        }
+
+        h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-primary);
+            margin: 1.5rem 0 1rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.7rem;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h4 i {
+            color: var(--color-secondary);
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .color-primary { background-color: #003f5c; }
+        .color-secondary { background-color: #2f9e44; }
+        .color-light { background-color: #f4f4f4; }
+        .color-dark { background-color: #2b2b2b; }
+        .color-warning { background-color: #f8961e; }
+        .color-danger { background-color: #d62828; }
+
+        .gradient-box {
+            height: 60px;
+            width: 100%;
+            background: linear-gradient(to right, #003f5c, #2f9e44);
+            border-radius: var(--radius-sm);
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        pre {
+            background: var(--color-dark);
+            color: white;
+            padding: 1.2rem;
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: monospace;
+        }
+
+        code {
+            background: #eee;
+            padding: 0.2rem 0.4rem;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-warning {
+            background-color: rgba(248, 150, 30, 0.15);
+            border-left: 4px solid var(--color-warning);
+        }
+
+        .alert-danger {
+            background-color: rgba(214, 40, 40, 0.15);
+            border-left: 4px solid var(--color-danger);
+        }
+
+        .alert i {
+            font-size: 1.5rem;
+            color: var(--color-warning);
+        }
+
+        .alert-danger i {
+            color: var(--color-danger);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(47, 158, 68, 0.1);
+            border-radius: var(--radius-sm);
+        }
+
+        .feature-item i {
+            font-size: 1.2rem;
+            color: var(--color-secondary);
+            margin-top: 0.2rem;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--color-warning);
+        }
+
+        .tip-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--color-warning);
+            margin-bottom: 1rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <h1>Documentação FinanciePRO</h1>
+                    <p class="slogan">Organize. Economize. Evolua.</p>
+                </div>
+            </div>
+            <p class="author">by [dev]$pk • PyNexus x FinanciePRO – 2025 – Todos os direitos reservados.</p>
+            
+            <div class="nav-container">
+                <button class="nav-btn" data-section="overview">
+                    <i class="fas fa-home"></i> Visão Geral
+                </button>
+                <button class="nav-btn" data-section="identity">
+                    <i class="fas fa-palette"></i> Identidade Visual
+                </button>
+                <button class="nav-btn" data-section="installation">
+                    <i class="fas fa-download"></i> Instalação
+                </button>
+                <button class="nav-btn" data-section="supabase">
+                    <i class="fas fa-database"></i> Supabase
+                </button>
+                <button class="nav-btn" data-section="usage">
+                    <i class="fas fa-book-open"></i> Como Usar
+                </button>
+                <button class="nav-btn" data-section="tips">
+                    <i class="fas fa-lightbulb"></i> Dicas Financeiras
+                </button>
+                <button class="nav-btn" data-section="future">
+                    <i class="fas fa-rocket"></i> Futuras Atualizações
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Visão Geral -->
+            <section id="overview" class="section-content active">
+                <h2><i class="fas fa-home"></i> Visão Geral do Projeto</h2>
+                
+                <p>O <strong>FinanciePRO</strong> é um aplicativo de gestão financeira pessoal que ajuda você a organizar, economizar e evoluir. Tenha controle real sobre sua vida financeira com uma interface moderna e prática.</p>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-quote-left"></i>
+                    <div>
+                        <strong>Você no controle do seu dinheiro, de verdade.</strong>
+                        <p>O FinanciePRO coloca você no centro das suas decisões financeiras.</p>
+                    </div>
+                </div>
+                
+                <h3>Principais Funcionalidades</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <div>Controle de despesas e receitas</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bullseye"></i>
+                        <div>Metas financeiras personalizadas</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-pie"></i>
+                        <div>Visualização gráfica do progresso</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>Dicas diárias de educação financeira</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bell"></i>
+                        <div>Alertas de gastos incomuns</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>Segurança e privacidade de dados</div>
+                    </div>
+                </div>
+                
+                <h3>Tecnologias Utilizadas</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4><i class="fab fa-python"></i> Backend</h4>
+                        <p>Python com Flask para a lógica de negócios e API</p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-database"></i> Banco de Dados</h4>
+                        <p>Supabase (PostgreSQL) para armazenamento de dados</p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-mobile-alt"></i> Frontend</h4>
+                        <p>HTML, CSS e JavaScript para a interface web responsiva</p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-credit-card"></i> Pagamentos</h4>
+                        <p>Stripe para processamento de assinaturas</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Identidade Visual -->
+            <section id="identity" class="section-content">
+                <h2><i class="fas fa-palette"></i> Identidade Visual</h2>
+                
+                <h3>Paleta de Cores Oficiais</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Função</th>
+                            <th>Cor</th>
+                            <th>Código Hex</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Primária</td>
+                            <td><span class="color-box color-primary"></span> Azul petróleo</td>
+                            <td><code>#003f5c</code></td>
+                            <td>Confiança, segurança e controle financeiro</td>
+                        </tr>
+                        <tr>
+                            <td>Secundária</td>
+                            <td><span class="color-box color-secondary"></span> Verde esmeralda</td>
+                            <td><code>#2f9e44</code></td>
+                            <td>Crescimento, dinheiro, estabilidade</td>
+                        </tr>
+                        <tr>
+                            <td>Neutra clara</td>
+                            <td><span class="color-box color-light"></span> Cinza gelo</td>
+                            <td><code>#f4f4f4</code></td>
+                            <td>Base para clareza e equilíbrio</td>
+                        </tr>
+                        <tr>
+                            <td>Texto escuro</td>
+                            <td><span class="color-box color-dark"></span> Cinza grafite</td>
+                            <td><code>#2b2b2b</code></td>
+                            <td>Para textos e informações importantes</td>
+                        </tr>
+                        <tr>
+                            <td>Atenção</td>
+                            <td><span class="color-box color-warning"></span> Laranja vivo</td>
+                            <td><code>#f8961e</code></td>
+                            <td>Para alertas e chamadas à ação</td>
+                        </tr>
+                        <tr>
+                            <td>Erro/alerta</td>
+                            <td><span class="color-box color-danger"></span> Vermelho claro</td>
+                            <td><code>#d62828</code></td>
+                            <td>Para avisos críticos e gastos descontrolados</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Gradiente Sugerido</h3>
+                <div class="gradient-box"></div>
+                <p><code>#003f5c</code> para <code>#2f9e44</code> - ideal para fundo de botão, loading bar, splash screen.</p>
+                
+                <h3>Fontes Recomendadas</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4><i class="fas fa-heading"></i> Cabeçalhos</h4>
+                        <p>Poppins - moderna e confiável</p>
+                        <p class="font-poppins" style="font-family: 'Poppins'; font-size: 1.2rem; margin-top: 1rem;">
+                            FinanciePRO - Controle Financeiro
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-font"></i> Corpo de Texto</h4>
+                        <p>Inter - limpa e legível</p>
+                        <p style="font-family: 'Inter'; font-size: 1rem; margin-top: 1rem;">
+                            Gerencie suas finanças com praticidade e segurança.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-highlighter"></i> Destaques</h4>
+                        <p>Montserrat ou IBM Plex Sans</p>
+                        <p style="font-family: 'Montserrat'; font-size: 1rem; margin-top: 1rem;">
+                            Economize 15% este mês!
+                        </p>
+                    </div>
+                </div>
+                
+                <h3>Slogans e Bordões</h3>
+                <div class="grid">
+                    <div class="card">
+                        <p>💡 "Você no controle do seu dinheiro, de verdade."</p>
+                    </div>
+                    <div class="card">
+                        <p>💰 "Organize. Economize. Evolua."</p>
+                    </div>
+                    <div class="card">
+                        <p>🚀 "A vida financeira que você merece começa aqui."</p>
+                    </div>
+                    <div class="card">
+                        <p>🧠 "Educação financeira prática, no seu ritmo."</p>
+                    </div>
+                    <div class="card">
+                        <p>🔒 "Seus dados, sua confiança. Suas finanças, seu poder."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Instalação -->
+            <section id="installation" class="section-content">
+                <h2><i class="fas fa-download"></i> Instalação e Configuração</h2>
+                
+                <h3>Pré-requisitos</h3>
+                <ul>
+                    <li>Python 3.8 ou superior</li>
+                    <li>Pip (gerenciador de pacotes Python)</li>
+                    <li>Conta no Supabase</li>
+                    <li>Conta no Stripe (opcional para pagamentos)</li>
+                </ul>
+                
+                <h3>Passo a Passo para Instalação Local</h3>
+                <pre># Clone o repositório
+git clone https://github.com/seu-usuario/FinanciePRO.git
+
+# Entre na pasta do projeto
+cd FinanciePRO
+
+# Crie um ambiente virtual (recomendado)
+python -m venv venv
+
+# Ative o ambiente virtual
+# Linux/Mac:
+source venv/bin/activate
+# Windows:
+venv\Scripts\activate
+
+# Instale as dependências
+pip install -r requirements.txt
+
+# Configure as variáveis de ambiente
+# Crie um arquivo .env na raiz do projeto com:
+SUPABASE_URL="sua-url-supabase"
+SUPABASE_KEY="sua-chave-supabase"
+STRIPE_API_KEY="sua-chave-stripe"  # opcional
+
+# Execute a aplicação
+python run.py
+
+# Acesse no navegador: http://localhost:5000</pre>
+                
+                <h3>Deploy em Produção</h3>
+                <p>Para colocar seu aplicativo online:</p>
+                <ol>
+                    <li>Escolha um provedor de hospedagem (AWS, Google Cloud, Heroku, etc.)</li>
+                    <li>Configure um servidor web (Nginx ou Apache)</li>
+                    <li>Use o Gunicorn como servidor WSGI para aplicações Python</li>
+                    <li>Configure um domínio personalizado com HTTPS</li>
+                    <li>Monitore sua aplicação com ferramentas como Sentry ou New Relic</li>
+                </ol>
+                
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Importante:</strong> Nunca exponha suas chaves de API no código fonte. 
+                        Utilize variáveis de ambiente ou serviços de gerenciamento de segredos.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supabase -->
+            <section id="supabase" class="section-content">
+                <h2><i class="fas fa-database"></i> Configuração do Supabase</h2>
+                
+                <h3>Configuração Inicial</h3>
+                <ol>
+                    <li>Crie uma conta no <a href="https://supabase.io" target="_blank">Supabase</a></li>
+                    <li>Crie um novo projeto com as configurações:
+                        <ul>
+                            <li><strong>Nome:</strong> FinanciePRO-Production</li>
+                            <li><strong>Região:</strong> South America (São Paulo)</li>
+                            <li><strong>Senha:</strong> Use uma senha forte e segura</li>
+                        </ul>
+                    </li>
+                    <li>Acesse as configurações do projeto e obtenha:
+                        <ul>
+                            <li><strong>URL:</strong> Adicione ao .env como SUPABASE_URL</li>
+                            <li><strong>Chave API:</strong> Adicione ao .env como SUPABASE_KEY</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <h3>Estrutura do Banco de Dados</h3>
+                <p>O FinanciePRO utiliza as seguintes tabelas:</p>
+                <pre>-- Tabela de Usuários
+CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    name TEXT NOT NULL,
+    plan TEXT DEFAULT 'free',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    currency TEXT DEFAULT 'R$',
+    risk_profile TEXT DEFAULT 'moderate',
+    notification_pref BOOLEAN DEFAULT TRUE
+);
+
+-- Tabela de Transações
+CREATE TABLE transactions (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    type TEXT NOT NULL CHECK (type IN ('income', 'expense')),
+    amount DECIMAL NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT,
+    date DATE NOT NULL,
+    recurring BOOLEAN DEFAULT FALSE
+);
+
+-- Tabela de Metas
+CREATE TABLE goals (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    name TEXT NOT NULL,
+    target_amount DECIMAL NOT NULL,
+    current_amount DECIMAL DEFAULT 0,
+    target_date DATE NOT NULL,
+    priority TEXT DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high'))
+);
+
+-- Tabela de Investimentos
+CREATE TABLE investments (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    name TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('stocks', 'bonds', 'crypto', 'real_estate', 'funds', 'others')),
+    amount DECIMAL NOT NULL,
+    expected_return DECIMAL,
+    date DATE NOT NULL,
+    notes TEXT
+);
+
+-- Tabela de Orçamentos
+CREATE TABLE budgets (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    category TEXT NOT NULL,
+    amount DECIMAL NOT NULL,
+    month INTEGER NOT NULL,
+    year INTEGER NOT NULL
+);
+
+-- Tabela de Notificações
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    message TEXT NOT NULL,
+    date TIMESTAMPTZ DEFAULT NOW(),
+    read BOOLEAN DEFAULT FALSE
+);
+
+-- Tabela de Assinaturas
+CREATE TABLE subscriptions (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    plan TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('active', 'canceled', 'expired', 'pending')),
+    start_date TIMESTAMPTZ NOT NULL,
+    end_date TIMESTAMPTZ,
+    payment_method TEXT NOT NULL,
+    stripe_subscription_id TEXT
+);</pre>
+                
+                <h3>Função RPC Necessária</h3>
+                <p>Crie esta função no Supabase para atualizar metas:</p>
+                <pre>CREATE OR REPLACE FUNCTION increment_goal(goal_id UUID, inc_amount FLOAT)
+RETURNS VOID AS $$
+UPDATE goals
+SET current_amount = current_amount + inc_amount
+WHERE id = goal_id;
+$$ LANGUAGE SQL;</pre>
+            </section>
+
+            <!-- Como Usar -->
+            <section id="usage" class="section-content">
+                <h2><i class="fas fa-book-open"></i> Como Usar o FinanciePRO</h2>
+                
+                <h3>Dashboard Principal</h3>
+                <p>O dashboard oferece uma visão geral das suas finanças:</p>
+                <ul>
+                    <li><strong>Saldo Atual:</strong> Seu saldo financeiro total</li>
+                    <li><strong>Receitas:</strong> Total de entradas no período</li>
+                    <li><strong>Despesas:</strong> Total de saídas no período</li>
+                    <li><strong>Gráficos:</strong> Visualização de receitas vs despesas e distribuição de gastos</li>
+                    <li><strong>Alertas:</strong> Notificações importantes sobre suas finanças</li>
+                </ul>
+                
+                <h3>Gerenciando Transações</h3>
+                <p>Para adicionar uma transação:</p>
+                <ol>
+                    <li>Navegue até "Transações" no menu</li>
+                    <li>Clique em "Nova Transação"</li>
+                    <li>Preencha os campos:
+                        <ul>
+                            <li>Tipo (Receita/Despesa)</li>
+                            <li>Valor</li>
+                            <li>Data</li>
+                            <li>Categoria</li>
+                            <li>Descrição (opcional)</li>
+                        </ul>
+                    </li>
+                    <li>Salve a transação</li>
+                </ol>
+                
+                <h3>Criando e Acompanhando Metas</h3>
+                <p>Para definir uma meta financeira:</p>
+                <ol>
+                    <li>Acesse a seção "Metas"</li>
+                    <li>Clique em "Nova Meta"</li>
+                    <li>Defina:
+                        <ul>
+                            <li>Nome da meta</li>
+                            <li>Valor alvo</li>
+                            <li>Data limite</li>
+                            <li>Prioridade</li>
+                        </ul>
+                    </li>
+                    <li>Acompanhe o progresso na barra de progresso</li>
+                    <li>Atualize o valor atual conforme for economizando</li>
+                </ol>
+                
+                <h3>Configurando Orçamentos</h3>
+                <p>Para criar um orçamento mensal:</p>
+                <ol>
+                    <li>Vá para "Orçamentos"</li>
+                    <li>Selecione o mês e ano</li>
+                    <li>Clique em "Novo Orçamento"</li>
+                    <li>Escolha uma categoria e defina um valor limite</li>
+                    <li>O sistema alertará quando você estiver próximo ou exceder o limite</li>
+                </ol>
+                
+                <h3>Gerenciando Assinaturas</h3>
+                <p>Para atualizar seu plano:</p>
+                <ol>
+                    <li>Acesse "Assinatura" no menu</li>
+                    <li>Escolha entre os planos Gratuito, PRO ou Business</li>
+                    <li>Preencha os dados de pagamento</li>
+                    <li>Confirme a assinatura</li>
+                    <li>Aproveite os recursos adicionais do seu novo plano</li>
+                </ol>
+            </section>
+
+            <!-- Dicas Financeiras -->
+            <section id="tips" class="section-content">
+                <h2><i class="fas fa-lightbulb"></i> Dicas Financeiras e Melhores Práticas</h2>
+                
+                <div class="tip-card">
+                    <h4><i class="fas fa-piggy-bank"></i> Regra 50/30/20</h4>
+                    <p>Distribua sua renda da seguinte forma:</p>
+                    <ul>
+                        <li><strong>50%</strong> para necessidades (aluguel, alimentação, transporte)</li>
+                        <li><strong>30%</strong> para desejos (lazer, compras não essenciais)</li>
+                        <li><strong>20%</strong> para investimentos e poupança</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h4><i class="fas fa-shield-alt"></i> Fundo de Emergência</h4>
+                    <p>Construa um fundo equivalente a:</p>
+                    <ul>
+                        <li>3-6 meses de suas despesas essenciais</li>
+                        <li>Mantenha em investimento de alta liquidez</li>
+                        <li>Atualize o valor anualmente</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h4><i class="fas fa-chart-line"></i> Investimentos Inteligentes</h4>
+                    <p>Diversifique seus investimentos:</p>
+                    <ul>
+                        <li>Renda Fixa: Tesouro Direto, CDBs</li>
+                        <li>Renda Variável: Ações, ETFs</li>
+                        <li>Fundos Imobiliários</li>
+                        <li>Criptomoedas (com moderação)</li>
+                    </ul>
+                </div>
+                
+                <h3>Desafios Financeiros</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4><i class="fas fa-coffee"></i> Desafio do Café</h4>
+                        <p>Reduza em 50% os gastos com cafés e lanches fora de casa durante 1 mês.</p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-calendar-week"></i> Desafio de 7 Dias</h4>
+                        <p>Fique 7 dias sem fazer nenhuma compra não essencial.</p>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-search-dollar"></i> Desafio de R$1000</h4>
+                        <p>Encontre R$1000 em economias em 30 dias (cortando supérfluos).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Futuras Atualizações -->
+            <section id="future" class="section-content">
+                <h2><i class="fas fa-rocket"></i> Futuras Atualizações</h2>
+                
+                <h3>Roadmap 2025-2026</h3>
+                <div class="grid">
+                    <div class="card">
+                        <h4><i class="fas fa-mobile-alt"></i> Versão 5.0 (Q3 2025)</h4>
+                        <ul>
+                            <li>App mobile nativo (React Native)</li>
+                            <li>Integração com bancos brasileiros</li>
+                            <li>Relatórios personalizados em PDF</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-chart-bar"></i> Versão 5.5 (Q4 2025)</h4>
+                        <ul>
+                            <li>Simulador de investimentos</li>
+                            <li>Análise de perfil de risco</li>
+                            <li>Dashboard para assessores financeiros</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4><i class="fas fa-robot"></i> Versão 6.0 (Q1 2026)</h4>
+                        <ul>
+                            <li>Inteligência Artificial para previsões</li>
+                            <li>Integração com contabilidade</li>
+                            <li>Versão para pequenas empresas</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Recursos em Desenvolvimento</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <i class="fas fa-university"></i>
+                        <div>Integração com bancos (Open Banking)</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-users"></i>
+                        <div>Modo Família (compartilhamento de orçamentos)</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-retirement"></i>
+                        <div>Planejamento de aposentadoria</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <div>Gerenciamento de faturas de cartão</div>
+                    </div>
+                </div>
+                
+                <h3>Contribua com o Projeto</h3>
+                <p>Por enquanto, o FinanciePRO é open-source! Envie suas contribuições:</p>
+                <ol>
+                    <li>Faça um fork do repositório</li>
+                    <li>Crie uma branch com sua feature: <code>git checkout -b minha-feature</code></li>
+                    <li>Commit suas alterações: <code>git commit -m 'feat: nova funcionalidade'</code></li>
+                    <li>Push para o branch: <code>git push origin minha-feature</code></li>
+                    <li>Abra um Pull Request no GitHub</li>
+                    <li>Caso suas contribuições sejam válidadas, entraremos em contato!</li>
+                </ol>
+            </section>
+        </main>
+
+        <footer>
+            <p>FinanciePRO 📈 - 2025 | Documentação Técnica v4.4</p>
+            <p>Desenvolvido com 💙 por [dev]$pk • PyNexus x FinanciePRO</p>
+        </footer>
+    </div>
+
+    <script>
+        // Navegação entre seções
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const sectionId = this.getAttribute('data-section');
+                
+                // Esconder todas as seções
+                document.querySelectorAll('.section-content').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Mostrar a seção selecionada
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Atualizar botões ativos
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.style.background = '';
+                });
+                this.style.background = 'var(--color-secondary)';
+            });
+        });
+        
+        // Exemplo de dados para gráficos (apenas demonstração)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicialmente destacar o botão ativo
+            document.querySelector('.nav-btn[data-section="overview"]').style.background = 'var(--color-secondary)';
+        });
+    </script>
+</body>
+</html>
