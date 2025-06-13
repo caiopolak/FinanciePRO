@@ -352,6 +352,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+<script>
+    const senhaCorreta = "2445";
+    const autenticar = () => {
+        const senha = prompt("Digite a senha para acessar:");
+        if (senha !== senhaCorreta) {
+            alert("Senha incorreta. Você será redirecionado.");
+            window.location.href = "https://google.com";
+        }
+    };
+    autenticar();
+</script>
+
     <div class="container">
         <header>
             <div class="logo">
