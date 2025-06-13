@@ -16,39 +16,15 @@ def register():
     
     if not email or not password or not name:
         return jsonify({"error": "Email, senha e nome são obrigatórios"}), 400
-    
+
     try:
-        # CORRECTED: Use dictionary format for create_user
-        auth_response = current_app.db.client.auth.admin.create_user({
-            "email": email,
-            "password": password,
-            "user_metadata": {"name": name}
-        })
-        
-        if not auth_response.user:
-            return jsonify({"error": "Falha ao criar usuário"}), 500
-        
-        # Criar registro na tabela users
-        user_data = {
-            "id": str(auth_response.user.id),
-            "email": email,
-            "name": name,
-            "plan": UserPlan.FREE.value,
-            "created_at": datetime.utcnow().isoformat()
-        }
-        
-        # Inserir usando o serviço admin
-        response = current_app.db.client.from_("users").insert(user_data).execute()
-        
-        if response.error:
-            current_app.logger.error(f"Erro ao criar usuário: {response.error}")
-            return jsonify({"error": "Falha ao criar registro do usuário"}), 500
-        
-        user = User(**response.data[0])
-        
-        # Gerar token JWT
-        token = generate_jwt_token(auth_response.user.id)
-        
+        user, error = current_app.db.create_user(email, password, name)
+
+        if error:
+            return jsonify({"error": error}), 400
+
+        token = generate_jwt_token(user.id)
+
         return jsonify({
             "message": "Usuário registrado com sucesso",
             "token": token,
@@ -129,16 +105,17 @@ def reset_password():
         return jsonify({"error": "Token e nova senha são obrigatórios"}), 400
     
     try:
-        # Método correto para redefinição de senha
-        response = current_app.db.client.auth.update_user(
-            access_token=token,
-            password=new_password
-        )
-        
+        response = current_app.db.client.auth.verify_otp({
+            "type": "recovery",
+            "token": token,
+            "password": new_password
+        })
+
         return jsonify({"message": "Senha atualizada com sucesso"}), 200
     except Exception as e:
         print(f"Error resetting password: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
 
 def generate_jwt_token(user_id: str) -> str:
     # CORRECTED: Convert dates to timestamps
