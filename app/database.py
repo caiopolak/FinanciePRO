@@ -24,13 +24,15 @@ class Database:
             if not email or not password or not name:
                 return None, "Missing required fields"
                 
+            # ADDED: email_confirmed=True for admin-created users
             auth_response = self.client.auth.sign_up({
                 "email": email,
                 "password": password,
                 "options": {
                     "data": {
                         "name": name,
-                        "plan": UserPlan.FREE.value
+                        "plan": UserPlan.FREE.value,
+                        "email_confirmed": True  # Bypass email confirmation
                     }
                 }
             })
@@ -48,8 +50,14 @@ class Database:
                 "risk_profile": "moderate",
                 "notification_pref": True
             }
-            
+            # Inserir com tratamento de erro melhorado            
             response = self.client.table("users").insert(user_data).execute()
+            
+            if response.error:
+                # Tratar erro de duplicata especificamente
+                if "23505" in str(response.error):
+                    return None, "Email já cadastrado"
+                return None, f"Database error: {response.error}"
             
             if response.data:
                 return User(**response.data[0]), None

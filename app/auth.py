@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import jwt
 import time
 from typing import Optional, Dict
-from .models import UserPlan
+from .models import User, UserPlan
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -18,22 +18,15 @@ def register():
         return jsonify({"error": "Email, senha e nome são obrigatórios"}), 400
     
     try:
-        # Criar usuário no Supabase Auth
-        auth_response = current_app.db.client.auth.sign_up({
+        # CORRECTED: Use dictionary format for create_user
+        auth_response = current_app.db.client.auth.admin.create_user({
             "email": email,
             "password": password,
-            "options": {
-                "data": {
-                    "name": name
-                }
-            }
+            "user_metadata": {"name": name}
         })
         
         if not auth_response.user:
             return jsonify({"error": "Falha ao criar usuário"}), 500
-        
-        # Esperar a criação do usuário
-        time.sleep(2)
         
         # Criar registro na tabela users
         user_data = {
@@ -44,14 +37,12 @@ def register():
             "created_at": datetime.utcnow().isoformat()
         }
         
-        response = current_app.db.client.table("users").insert(user_data).execute()
+        # Inserir usando o serviço admin
+        response = current_app.db.client.from_("users").insert(user_data).execute()
         
-        if not response.data:
-            # Tentar novamente se falhar
-            time.sleep(1)
-            response = current_app.db.client.table("users").insert(user_data).execute()
-            if not response.data:
-                return jsonify({"error": "Falha ao criar registro do usuário"}), 500
+        if response.error:
+            current_app.logger.error(f"Erro ao criar usuário: {response.error}")
+            return jsonify({"error": "Falha ao criar registro do usuário"}), 500
         
         user = User(**response.data[0])
         
@@ -88,9 +79,6 @@ def login():
             "password": password
         })
         
-        if not auth_response.user:
-            return jsonify({"error": "Credenciais inválidas"}), 401
-        
         # Obter dados do usuário
         user = current_app.db.get_user_by_id(auth_response.user.id)
         if not user:
@@ -110,8 +98,12 @@ def login():
             }
         }), 200
     except Exception as e:
+        # Tratamento específico para erros do Supabase
+        if "Invalid login credentials" in str(e):
+            return jsonify({"error": "Credenciais inválidas"}), 401
+        
         current_app.logger.error(f"Erro no login: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Erro interno do servidor"}), 500
 
 @auth_bp.route('/forgot-password', methods=['POST'])
 def forgot_password():
@@ -121,7 +113,8 @@ def forgot_password():
         return jsonify({"error": "Email é necessário"}), 400
     
     try:
-        current_app.db.client.auth.reset_password_email(email)
+        # Método correto para enviar email de reset
+        current_app.db.client.auth.reset_password_for_email(email)
         return jsonify({"message": "Email de reset de senha enviado com sucesso!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -137,8 +130,8 @@ def reset_password():
     
     try:
         # Método correto para redefinição de senha
-        response = current_app.db.client.auth.reset_password(
-            token=token,
+        response = current_app.db.client.auth.update_user(
+            access_token=token,
             password=new_password
         )
         
@@ -148,10 +141,11 @@ def reset_password():
         return jsonify({"error": str(e)}), 500
 
 def generate_jwt_token(user_id: str) -> str:
+    # CORRECTED: Convert dates to timestamps
     payload = {
         "sub": user_id,
-        "iat": datetime.utcnow(),
-        "exp": datetime.utcnow() + timedelta(days=7)
+        "iat": datetime.utcnow().timestamp(),
+        "exp": (datetime.utcnow() + timedelta(days=7)).timestamp()
     }
     return jwt.encode(payload, current_app.config['JWT_SECRET_KEY'], algorithm="HS256")
 

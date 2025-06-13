@@ -41,10 +41,11 @@ class PaymentMethod(str, Enum):
 class User(BaseModel):
     id: str
     email: str
-    password_hash: str
     name: str
+    password_hash: str
     created_at: Optional[datetime] = None
     plan: UserPlan = UserPlan.FREE
+    email_confirmed: bool = False
     subscription_id: Optional[str] = None
     currency: Optional[str] = "R$"
     risk_profile: Optional[str] = "moderate"
