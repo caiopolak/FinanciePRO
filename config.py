@@ -7,6 +7,7 @@ class Config:
     # Configurações do Supabase
     SUPABASE_URL = os.getenv("SUPABASE_URL", "https://rnpkqnrxpwxmnzaqthqm.supabase.co")
     SUPABASE_KEY = os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucGtxbnJ4cHd4bW56YXF0aHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1OTE1NzgsImV4cCI6MjA2NTE2NzU3OH0.FD3r_Gn3HnO1TJHGKpbc6uBix3--bdAdcwPn6gRqkL0")
+    SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", os.getenv("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucGtxbnJ4cHd4bW56YXF0aHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1OTE1NzgsImV4cCI6MjA2NTE2NzU3OH0.FD3r_Gn3HnO1TJHGKpbc6uBix3--bdAdcwPn6gRqkL0"))
     
     # Configurações do Stripe
     STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "sk_test_51RY7UHRr2akl2mosjxX3BQI7c9P3TuhHvtipmsBWr74iuz4c4cuacmo6IdjE7ZtTylHBmHOm7ozx7k6YKnVBpKcO00uzEii57b")

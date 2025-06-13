@@ -16,15 +16,21 @@ def register():
     
     if not email or not password or not name:
         return jsonify({"error": "Email, senha e nome são obrigatórios"}), 400
-
+    
     try:
+        # Usar o método create_user da classe Database
         user, error = current_app.db.create_user(email, password, name)
-
+        
         if error:
+            current_app.logger.error(f"Erro ao criar usuário: {error}")
             return jsonify({"error": error}), 400
-
+        
+        if not user:
+            return jsonify({"error": "Falha ao criar usuário"}), 500
+        
+        # Gerar token JWT
         token = generate_jwt_token(user.id)
-
+        
         return jsonify({
             "message": "Usuário registrado com sucesso",
             "token": token,
@@ -55,10 +61,21 @@ def login():
             "password": password
         })
         
-        # Obter dados do usuário
+        if not auth_response.user:
+            return jsonify({"error": "Credenciais inválidas"}), 401
+        
+        # Obter dados do usuário da tabela ou criar um objeto básico
         user = current_app.db.get_user_by_id(auth_response.user.id)
         if not user:
-            return jsonify({"error": "Usuário não encontrado"}), 404
+            # Se não encontrar na tabela, criar objeto básico com dados do auth
+            from .models import User, UserPlan
+            user = User(
+                id=str(auth_response.user.id),
+                email=auth_response.user.email,
+                name=auth_response.user.user_metadata.get('name', 'Usuário'),
+                plan=UserPlan.FREE.value,
+                created_at=auth_response.user.created_at
+            )
         
         # Gerar token JWT
         token = generate_jwt_token(auth_response.user.id)
@@ -75,7 +92,8 @@ def login():
         }), 200
     except Exception as e:
         # Tratamento específico para erros do Supabase
-        if "Invalid login credentials" in str(e):
+        error_msg = str(e).lower()
+        if "invalid login credentials" in error_msg or "invalid_credentials" in error_msg or "email not confirmed" in error_msg:
             return jsonify({"error": "Credenciais inválidas"}), 401
         
         current_app.logger.error(f"Erro no login: {str(e)}")
@@ -105,17 +123,16 @@ def reset_password():
         return jsonify({"error": "Token e nova senha são obrigatórios"}), 400
     
     try:
-        response = current_app.db.client.auth.verify_otp({
-            "type": "recovery",
-            "token": token,
-            "password": new_password
-        })
-
+        # Método correto para redefinição de senha
+        response = current_app.db.client.auth.update_user(
+            access_token=token,
+            password=new_password
+        )
+        
         return jsonify({"message": "Senha atualizada com sucesso"}), 200
     except Exception as e:
         print(f"Error resetting password: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
 
 def generate_jwt_token(user_id: str) -> str:
     # CORRECTED: Convert dates to timestamps

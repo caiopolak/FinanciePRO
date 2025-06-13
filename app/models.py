@@ -42,7 +42,7 @@ class User(BaseModel):
     id: str
     email: str
     name: str
-    password_hash: str
+    password_hash: Optional[str] = None  
     created_at: Optional[datetime] = None
     plan: UserPlan = UserPlan.FREE
     email_confirmed: bool = False

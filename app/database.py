@@ -13,9 +13,15 @@ class Database:
     def __init__(self):
         url = os.getenv("SUPABASE_URL")
         key = os.getenv("SUPABASE_KEY")
+        service_key = os.getenv("SUPABASE_SERVICE_KEY")
         if not url or not key:
             raise ValueError("Supabase URL and Key must be set in environment variables")
         self.client: Client = create_client(url, key)
+        # Cliente com privilégios de service role para operações administrativas
+        if service_key:
+            self.admin_client: Client = create_client(url, service_key)
+        else:
+            self.admin_client = self.client
     
     # Operações de usuário
     def create_user(self, email: str, password: str, name: str) -> Tuple[Optional[User], Optional[str]]:
@@ -24,18 +30,34 @@ class Database:
             if not email or not password or not name:
                 return None, "Missing required fields"
                 
-            # ADDED: email_confirmed=True for admin-created users
-            auth_response = self.client.auth.sign_up({
-                "email": email,
-                "password": password,
-                "options": {
-                    "data": {
-                        "name": name,
-                        "plan": UserPlan.FREE.value,
-                        "email_confirmed": True  # Bypass email confirmation
+            # Tentar criar usuário com admin client primeiro (se disponível)
+            try:
+                if hasattr(self, 'admin_client') and self.admin_client != self.client:
+                    # Usar admin client para criar usuário já confirmado
+                    auth_response = self.admin_client.auth.admin.create_user({
+                        "email": email,
+                        "password": password,
+                        "email_confirm": True,
+                        "user_metadata": {
+                            "name": name,
+                            "plan": UserPlan.FREE.value
+                        }
+                    })
+                else:
+                    raise Exception("Admin client not available")
+            except Exception as admin_error:
+                print(f"Admin create failed, trying regular signup: {admin_error}")
+                # Fallback para signup normal
+                auth_response = self.client.auth.sign_up({
+                    "email": email,
+                    "password": password,
+                    "options": {
+                        "data": {
+                            "name": name,
+                            "plan": UserPlan.FREE.value
+                        }
                     }
-                }
-            })
+                })
             
             if not auth_response.user:
                 return None, "Failed to create auth user"
@@ -50,17 +72,34 @@ class Database:
                 "risk_profile": "moderate",
                 "notification_pref": True
             }
-            # Inserir com tratamento de erro melhorado            
-            response = self.client.table("users").insert(user_data).execute()
             
-            if response.error:
-                # Tratar erro de duplicata especificamente
-                if "23505" in str(response.error):
-                    return None, "Email já cadastrado"
-                return None, f"Database error: {response.error}"
-            
-            if response.data:
-                return User(**response.data[0]), None
+            # Tentar inserir dados do usuário na tabela usando cliente administrativo
+            try:
+                # Usar cliente administrativo para contornar RLS
+                response = self.admin_client.table("users").insert(user_data).execute()
+                
+                if response.error:
+                    if "23505" in str(response.error):
+                        return None, "Email já cadastrado"
+                    return None, f"Database error: {response.error}"
+                
+                if response.data:
+                    return User(**response.data[0]), None
+                    
+            except Exception as insert_error:
+                print(f"Insert error: {str(insert_error)}")
+                # Se tudo falhar, retornar o usuário básico sem dados na tabela
+                basic_user = User(
+                    id=str(auth_response.user.id),
+                    email=email,
+                    name=name,
+                    plan=UserPlan.FREE.value,
+                    created_at=datetime.utcnow().isoformat(),
+                    currency="R$",
+                    risk_profile="moderate",
+                    notification_pref=True
+                )
+                return basic_user, None
             
             # Fallback: Buscar usuário se insert não retornar dados
             user = self.get_user_by_id(auth_response.user.id)
