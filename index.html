@@ -1,63 +1,134 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FinanciePRO - Gestão Financeira</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Montserrat:wght@600&family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plenne - Sua Vida Financeira no Controle</title>
   <style>
-    :root {
-      --azul: #003f5c;
-      --verde: #2f9e44;
-      --cinza-claro: #f4f4f4;
-      --cinza-escuro: #2b2b2b;
-      --laranja: #f8961e;
-    }
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(to bottom right, var(--azul), var(--verde));
-      color: var(--cinza-claro);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6AC47E, #3E9C68);
+      color: #fff;
+    }
+    header {
+      padding: 40px;
       text-align: center;
+      background: rgba(0, 0, 0, 0.2);
     }
-    .logo {
-      width: 100px;
-      margin-bottom: 1rem;
-    }
-    h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2.5rem;
+    header h1 {
+      font-size: 3em;
       margin: 0;
     }
-    p {
-      font-size: 1.2rem;
-      margin: 1rem 0 2rem;
+    header p {
+      font-size: 1.2em;
+      opacity: 0.9;
     }
-    .cta-button {
-      background-color: var(--laranja);
-      color: white;
+    section {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .feature {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      transition: 0.3s;
+    }
+    .feature:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px);
+    }
+    h2 {
+      color: #F0FFFA;
+    }
+    button.floating {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #FFD700;
+      color: #000;
       border: none;
-      padding: 1rem 2rem;
-      margin: 0.5rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: bold;
+      border-radius: 50px;
+      padding: 15px 25px;
+      font-size: 1em;
       cursor: pointer;
-      transition: background 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: float 2s ease-in-out infinite;
     }
-    .cta-button:hover {
-      background-color: #2f9e44;
+    @keyframes float {
+      0% {transform: translateY(0);}
+      50% {transform: translateY(-10px);}
+      100% {transform: translateY(0);}
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.9em;
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 2em; }
+      section { padding: 30px 10px; }
     }
   </style>
 </head>
 <body>
-  <h1>FinanciePRO 📊</h1>
-  <p>Organize. Economize. Evolua.<br><em>Você no controle do seu dinheiro, de verdade!</em></p>
-  <button class="cta-button" onclick="window.location.href='https://caiopolak.github.io/FinanciePRO/indice.html'">Saiba mais sobre o projeto!</button>
+
+<header>
+  <h1>Bem-vindo ao Plenne</h1>
+  <p>Seu gerenciador financeiro para conquistar metas, sonhos e ter controle total sobre sua vida financeira.</p>
+</header>
+
+<section>
+  <div class="feature">
+    <h2>🔐 Autenticação Segura</h2>
+    <p>Login, cadastro e perfis personalizados para cada usuário. Segurança garantida com Supabase Auth.</p>
+  </div>
+
+  <div class="feature">
+    <h2>👥 Workspaces Inteligentes</h2>
+    <p>Crie múltiplos workspaces, gerencie membros e personalize seu espaço de trabalho financeiro.</p>
+  </div>
+
+  <div class="feature">
+    <h2>💸 Gestão de Transações</h2>
+    <p>Cadastre receitas, despesas, personalize categorias e acompanhe todas as suas movimentações com filtros avançados.</p>
+  </div>
+
+  <div class="feature">
+    <h2>🎯 Metas Financeiras</h2>
+    <p>Defina objetivos financeiros, acompanhe aportes e veja seu progresso em tempo real.</p>
+  </div>
+
+  <div class="feature">
+    <h2>📈 Investimentos</h2>
+    <p>Registre investimentos, visualize rendimento esperado e acompanhe sua carteira de forma simplificada.</p>
+  </div>
+
+  <div class="feature">
+    <h2>📝 Orçamentos Mensais</h2>
+    <p>Planeje, controle e receba alertas quando estiver perto de atingir seu orçamento mensal.</p>
+  </div>
+
+  <div class="feature">
+    <h2>📊 Dashboard & Analytics</h2>
+    <p>Gráficos, cards e indicadores para você ter uma visão clara da sua vida financeira.</p>
+  </div>
+
+  <div class="feature">
+    <h2>📚 Educação Financeira</h2>
+    <p>Conteúdo educativo, desafios, dicas práticas e módulos de aprendizado para você dominar sua vida financeira.</p>
+  </div>
+</section>
+
+<button class="floating" onclick="window.location.href='https://plenne-app.lovable.app/'">Testar Agora</button>
+
+<footer>
+  &copy; 2025 Plenne - Todos os direitos reservados.
+</footer>
+
 </body>
 </html>
